@@ -1,5 +1,5 @@
 import Image from 'next/image';
-import SkillTag from './SkillTag';
+import SkillTag from './Tag';
 
 export default function UserCard({ user }) {
   return (

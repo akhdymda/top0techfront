@@ -5,7 +5,6 @@ import { useSearchParams, useRouter } from 'next/navigation';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import UserCard from '@/components/UserCard';
-import SkillTag from '@/components/SkillTag';
 
 // 仮のデータ（後でバックエンドから取得）
 // const mockUser = {
@@ -52,35 +51,31 @@ export default function SearchResults() {
       <main className="flex-1 container mx-auto px-4 py-8">
         <div>
           <div className="flex justify-center gap-2 mb-6">
-            <span className="text-2xl">💡</span>
-            <h2 className="text-3xl font-bold">ふわっと検索結果</h2>
+            <span className="text-2xl">🏢</span>
+            <h2 className="text-3xl font-bold">{query}の検索結果</h2>
           </div>
 
-          <p className="text-center text-xl text-gray-600 mb-4">
-            あなたの検索から、
-          </p>
+          {users.length > 0 ? (
+            <>
+              <p className="text-center text-xl text-gray-600 mb-4">
+                {query}のメンバー一覧
+              </p>
 
-          {users.length > 0 && (
-            <div className="flex justify-center gap-4 mb-8">
-              {users[0].skills.map((skill, index) => (
-                <SkillTag key={index} text={skill} />
-              ))}
-            </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
+                {users.map((user) => (
+                  <UserCard key={user.id} user={user} />
+                ))}
+              </div>
+            </>
+          ) : (
+            <p className="text-center text-xl text-gray-600 mb-4">
+              {query}のメンバーは見つかりませんでした
+            </p>
           )}
-
-          <p className="text-center text-xl text-gray-600 mb-8">
-            のスキルを持った人がマッチしました！
-          </p>
         </div>
 
-        {loading ? (
+        {loading && (
           <p className="text-center text-gray-500">読み込み中...</p>
-        ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {users.map((user) => (
-              <UserCard key={user.id} user={user} />
-            ))}
-          </div>
         )}
 
         <div className="flex justify-end mt-8">
