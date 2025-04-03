@@ -62,7 +62,8 @@ export default function Home() {
             <div className="text-center mb-12">
               <h1 className="text-6xl font-normal font-sans-jp mb-6 text-white tracking-widest">CHOTTO</h1>
               <p className="text-xl text-gray-400 font-sans-jp mb-12">
-                ちょっと聞きたい。ちょっと話したい。から何か生まれるかも。
+                ちょっと聞きたい。ちょっと話したい。
+                <br />から何か生まれるかも。
               </p>
             </div>
 
