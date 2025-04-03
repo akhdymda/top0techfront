@@ -3,8 +3,8 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { ArrowDown, ArrowUpRight, Search as SearchIcon, Sparkles, Cloud } from 'lucide-react';
-import Header from '@/components/Header';
-import Footer from '@/components/Footer';
+import Header from '../../components/Header';
+import Footer from '../../components/Footer';
 
 export default function Search() {
   const [activeSection, setActiveSection] = useState(0);
@@ -59,8 +59,14 @@ export default function Search() {
   };
   
   const handleSearch = () => {
-    if (query.trim()) {
-      router.push(`/search/results?q=${encodeURIComponent(query.trim())}`);
+    const searchQuery = query.trim() || 'all';
+    router.push(`/search/results?q=${encodeURIComponent(searchQuery)}`);
+  };
+
+  const handleKeyPress = (e) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      handleSearch();
     }
   };
 
@@ -148,6 +154,7 @@ export default function Search() {
             <textarea
               value={query}
               onChange={(e) => setQuery(e.target.value)}
+              onKeyPress={handleKeyPress}
               placeholder={`あのスキル持った人いないかな？\nこないだ読んだあの本の話したいな。\nこのプロジェクトやってたのって誰だっけ？`}
               className="w-full h-48 pl-12 pr-4 pt-4 pb-4 bg-white/10 backdrop-blur-sm border-2 border-white/20 rounded-lg resize-none focus:outline-none focus:ring-2 focus:ring-white/30 text-white placeholder-white/15 whitespace-pre-line"
             />
@@ -155,7 +162,7 @@ export default function Search() {
           </div>
           <div className="mt-8 flex flex-col items-center gap-12">
             <button
-              onClick={() => router.push('/search/results')}
+              onClick={handleSearch}
               className="px-28 py-3 bg-white text-black rounded-full hover:bg-gray-200 transition-colors font-sans-jp text-lg tracking-widest flex items-center gap-2"
             >
               <Cloud className="w-7 h-7" />
@@ -163,19 +170,19 @@ export default function Search() {
             </button>
             <div className="flex gap-12">
               <a
-                href="/skill-search"
+                href="/search/skill"
                 className="w-80 px-8 py-3 bg-[#A5C05B] text-white rounded-full hover:opacity-90 transition-opacity font-sans-jp text-center whitespace-nowrap"
               >
                 スキルから探す人はこちら
               </a>
               <a
-                href="/department-search"
+                href="/search/department"
                 className="w-80 px-8 py-3 bg-[#7BA4A8] text-white rounded-full hover:opacity-90 transition-opacity font-sans-jp text-center whitespace-nowrap"
               >
                 部署から探す人はこちら
               </a>
               <a
-                href="/department-search"
+                href="/search/book"
                 className="w-80 px-8 py-3 bg-[#D09683] text-white rounded-full hover:opacity-90 transition-opacity font-sans-jp text-center whitespace-nowrap"
               >
                 読書仲間から探す人はこちら

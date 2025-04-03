@@ -8,17 +8,17 @@ import Footer from '../../../../components/Footer';
 import UserCard from '../../../../components/UserCard';
 import Tag from '../../../../components/Tag';
 
-export default function SkillSearchResults() {
+export default function DepartmentSearchResults() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
-  const skillName = searchParams.get('q');
+  const departmentName = searchParams.get('q');
 
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_ENDPOINT}/skills/${skillName}`);
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_ENDPOINT}/departments/${departmentName}`);
         const data = await response.json();
         setUsers(data.users || []);
       } catch (error) {
@@ -28,10 +28,10 @@ export default function SkillSearchResults() {
       }
     };
 
-    if (skillName) {
+    if (departmentName) {
       fetchUsers();
     }
-  }, [skillName]);
+  }, [departmentName]);
 
   if (loading) {
     return (
@@ -66,10 +66,10 @@ export default function SkillSearchResults() {
         <div className="relative z-20 min-h-screen py-12">
           <div className="max-w-6xl w-full mx-auto px-6">
             <div className="text-center mb-12">
-              <h2 className="text-4xl font-normal font-sans-jp mb-4 text-white tracking-widest">スキル検索結果</h2>
+              <h2 className="text-4xl font-normal font-sans-jp mb-4 text-white tracking-widest">部署検索結果</h2>
               <div className="flex items-center justify-center gap-2">
-                <p className="text-gray-400 font-sans-jp">選択したスキル:</p>
-                <Tag text={skillName} />
+                <p className="text-gray-400 font-sans-jp">選択した部署:</p>
+                <Tag text={departmentName} />
               </div>
             </div>
 

@@ -8,7 +8,7 @@ export default function Header() {
 
   return (
     <header className="w-full px-4 py-2 flex justify-between items-center bg-white border-b">
-      <Link href="/search" className="flex items-center">
+      <Link href="/search#search-section" className="flex items-center">
         <span className="text-2xl text-gray-700 font-medium">CHOTTO</span>
       </Link>
       
@@ -33,7 +33,7 @@ export default function Header() {
             {isSearchOpen && (
               <div className="absolute top-full mt-2 w-32 bg-white rounded-lg shadow-lg py-2 z-50">
                 <Link 
-                  href="/search" 
+                  href="/search#search-section" 
                   className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                   onClick={() => setIsSearchOpen(false)}
                 >
