@@ -1,5 +1,5 @@
 "use client";
-import UserCard from "@/components/UserCard";
+import UserCard from "../../../../../components/UserCard";
 import fetchCustomer from "./../fetchCustomer";
 import { useRouter } from "next/navigation";
 import { useEffect, useState, use } from "react";
@@ -31,7 +31,7 @@ function ConfirmPage(props) {
     <>
       <div className="card bordered bg-white border-blue-200 border-2 max-w-sm m-4">
         <div className="alert alert-success p-4 text-center">更新しました</div>
-        <UserCard {...customer} />
+        <UserCard user={customer} />
         <a href="/customers" className="flex justify-center">
           <button className="btn btn-outline btn-accent">一覧に戻る</button>
         </a>

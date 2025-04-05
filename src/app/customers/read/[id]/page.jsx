@@ -1,5 +1,5 @@
 "use client";
-import UserCard from "@/components/UserCard";
+import UserCard from "../../../../components/UserCard";
 import BackButton from "./back_button";
 import fetchCustomer from "./fetchCustomer";
 import { useEffect, useState, use } from "react";
@@ -21,7 +21,7 @@ export default function ReadPage(props) {
   return (
     <>
       <div className="card bordered bg-white border-blue-200 border-2 max-w-sm m-4">
-        <UserCard {...customerInfo} />
+        <UserCard user={customerInfo} />
         <BackButton>戻る</BackButton>
       </div>
     </>

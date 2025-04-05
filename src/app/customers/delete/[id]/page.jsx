@@ -1,5 +1,5 @@
 "use client";
-import UserCard from "@/components/UserCard";
+import UserCard from "../../../../components/UserCard";
 import deleteCustomer from "./deleteCustomer";
 import fetchCustomer from "./fetchCustomer";
 import { useRouter } from "next/navigation";
@@ -28,7 +28,7 @@ export default function DeletePage(props) {
   return (
     <>
       <div className="card bordered bg-white border-blue-200 border-2 max-w-sm m-4">
-        <UserCard {...customer} />
+        <UserCard user={customer} />
 
         <button onClick={handleSubmit}>
           <div className="btn btn-primary m-4 text-2xl">削除</div>
