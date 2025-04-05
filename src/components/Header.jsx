@@ -47,7 +47,7 @@ export default function Header() {
                   スキル
                 </Link>
                 <Link 
-                  href="/department" 
+                  href="/search/department" 
                   className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                   onClick={() => setIsSearchOpen(false)}
                 >
