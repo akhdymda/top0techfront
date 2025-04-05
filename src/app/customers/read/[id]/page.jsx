@@ -1,9 +1,5 @@
 "use client";
-<<<<<<< HEAD
-import OneCustomerInfoCard from "@/app/components/one_customer_info_card.jsx";
-=======
 import UserCard from "../../../../components/UserCard";
->>>>>>> main
 import BackButton from "./back_button";
 import fetchCustomer from "./fetchCustomer";
 import { useEffect, useState, use } from "react";
@@ -25,11 +21,7 @@ export default function ReadPage(props) {
   return (
     <>
       <div className="card bordered bg-white border-blue-200 border-2 max-w-sm m-4">
-<<<<<<< HEAD
-        <OneCustomerInfoCard {...customerInfo} />
-=======
         <UserCard user={customerInfo} />
->>>>>>> main
         <BackButton>戻る</BackButton>
       </div>
     </>

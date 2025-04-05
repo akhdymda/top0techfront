@@ -1,9 +1,6 @@
 "use client";
-<<<<<<< HEAD
-import OneCustomerInfoCard from "@/app/components/one_customer_info_card.jsx";
-=======
+
 import UserCard from "../../../../components/UserCard";
->>>>>>> main
 import fetchCustomer from "./fetchCustomer";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -37,11 +34,7 @@ function ConfirmPage() {
         <div className="alert alert-success p-4 text-center">
           正常に作成しました
         </div>
-<<<<<<< HEAD
-        <OneCustomerInfoCard {...customer} />
-=======
         <UserCard user={customer} />
->>>>>>> main
         <button onClick={() => router.push("./../../customers")}>
           <div className="btn btn-primary m-4 text-2xl">戻る</div>
         </button>
