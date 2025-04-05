@@ -1,14 +1,11 @@
 'use client';
 
-import { useEffect, useState, Suspense } from 'react';
-import { useSearchParams, useRouter } from 'next/navigation';
-import Header from '../../../components/Header';
-import Footer from '../../../components/Footer';
-import UserCard from '../../../components/UserCard';
-import Tag from '../../../components/Tag';
+import { useEffect, useState } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
+import UserCard from '../../../../components/UserCard';
+import Tag from '../../../../components/Tag';
 
-// 検索パラメータを使用するコンポーネントを分離
-function DepartmentSearchResultsContent() {
+export default function DepartmentSearchResultsContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const departmentName = searchParams.get('q');
@@ -43,26 +40,22 @@ function DepartmentSearchResultsContent() {
 
       <div className="text-center mb-8">
         <Tag text={departmentName} />
-        <p className="text-xl text-gray-600 mt-4">
-          のメンバー一覧
-        </p>
+        <p className="text-xl text-gray-600 mt-4">のメンバー一覧</p>
       </div>
 
       {loading ? (
         <div className="flex justify-center">
           <p className="text-gray-500">読み込み中...</p>
         </div>
-      ) : (
+      ) : users.length > 0 ? (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {users.length > 0 ? (
-            users.map((user) => (
-              <UserCard key={user.id} user={user} />
-            ))
-          ) : (
-            <div className="col-span-2 text-center text-gray-600">
-              この部署にはまだメンバーがいません
-            </div>
-          )}
+          {users.map((user) => (
+            <UserCard key={user.id} user={user} />
+          ))}
+        </div>
+      ) : (
+        <div className="col-span-2 text-center text-gray-600">
+          この部署にはまだメンバーがいません
         </div>
       )}
 
@@ -77,29 +70,3 @@ function DepartmentSearchResultsContent() {
     </div>
   );
 }
-
-// フォールバックのローディングコンポーネント
-function SearchResultsLoading() {
-  return (
-    <div className="flex justify-center items-center p-12">
-      <p className="text-gray-500">結果を読み込んでいます...</p>
-    </div>
-  );
-}
-
-// メインのページコンポーネント
-export default function DepartmentSearchResults() {
-  return (
-    <div className="min-h-screen flex flex-col bg-[#F5F5F5]">
-      <Header />
-
-      <main className="flex-1 container mx-auto px-4 py-8">
-        <Suspense fallback={<SearchResultsLoading />}>
-          <DepartmentSearchResultsContent />
-        </Suspense>
-      </main>
-
-      <Footer />
-    </div>
-  );
-} 
