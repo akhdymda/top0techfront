@@ -1,5 +1,4 @@
 "use client";
-// import OneCustomerInfoCard from "@/app/components/one_customer_info_card.jsx";
 import UserCard from "@/components/UserCard.jsx"; 
 import Link from "next/link";
 import { useEffect, useState } from "react";
@@ -32,7 +31,7 @@ export default function Page() {
               key={index}
               className="card bordered bg-white border-blue-200 border-2 flex flex-row max-w-sm m-4"
             >
-              <OneCustomerInfoCard {...customerInfo} />
+              <UserCard {...customerInfo} />
               <div className="card-body flex flex-col justify-between">
                 <Link href={`/customers/read/${customerInfo.customer_id}`}>
                   <button className="btn btn-neutral w-20 border-0 bg-blue-200 text-black hover:text-white">
