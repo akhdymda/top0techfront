@@ -2,10 +2,10 @@
 
 import { useEffect, useState } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
-import Header from '@/components/Header';
-import Footer from '@/components/Footer';
-import UserCard from '@/components/UserCard';
-import Tag from '@/components/Tag';
+import Header from '../../components/Header';
+import Footer from '../../components/Footer';
+import UserCard from '../../components/UserCard';
+import Tag from '../../components/Tag';
 
 export default function DepartmentSearchResults() {
   const searchParams = useSearchParams();

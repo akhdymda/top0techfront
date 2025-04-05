@@ -3,8 +3,8 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { ArrowDown, ArrowUpRight, Search as SearchIcon, Sparkles, Cloud } from 'lucide-react';
-import Header from '@/components/Header';
-import Footer from '@/components/Footer';
+import Header from '../../components/Header';
+import Footer from '../../components/Footer';
 
 export default function Search() {
   const [activeSection, setActiveSection] = useState(0);

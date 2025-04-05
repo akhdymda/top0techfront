@@ -2,9 +2,9 @@
 
 import { useEffect, useState } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
-import Header from '@/components/Header';
-import Footer from '@/components/Footer';
-import UserCard from '@/components/UserCard';
+import Header from '../../../components/Header';
+import Footer from '../../../components/Footer';
+import UserCard from '../../../components/UserCard';
 
 // 仮のデータ（後でバックエンドから取得）
 // const mockUser = {

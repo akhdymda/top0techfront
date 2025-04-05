@@ -2,10 +2,10 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import Header from '@/components/Header';
-import Footer from '@/components/Footer';
-import Tag from '@/components/Tag';
-import UserCard from '@/components/UserCard';
+import Header from '../../../components/Header';
+import Footer from '../../../components/Footer';
+import Tag from '../../../components/Tag';
+import UserCard from '../../../components/UserCard';
 
 export default function SkillPage() {
   const router = useRouter();

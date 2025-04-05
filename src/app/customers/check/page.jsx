@@ -1,5 +1,5 @@
 export const dynamic = 'force-dynamic'
-import UserCard from "@/components/UserCard";
+import UserCard from "../../../components/UserCard";
 
 async function fetchCustomer(id) {
   const res = await fetch(
