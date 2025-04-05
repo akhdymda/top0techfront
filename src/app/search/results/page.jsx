@@ -6,6 +6,7 @@ import { ArrowLeft, Sparkles } from 'lucide-react';
 import Header from '../../../components/Header';
 import Footer from '../../../components/Footer';
 import UserCard from '../../../components/UserCard';
+import { Suspense } from 'react';
 
 // 仮のデータ（後でバックエンドから取得）
 // const mockUser = {
@@ -17,7 +18,7 @@ import UserCard from '../../../components/UserCard';
 //   skills: ["Webマーケティング全般", "データ分析と計測", "コンテンツマーケティング", "SNSマーケティング"]
 // };
 
-export default function SearchResults() {
+function SearchResultsContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const query = searchParams.get('q');
