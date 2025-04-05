@@ -1,5 +1,5 @@
 export const dynamic = 'force-dynamic'
-import UserCard from "../../../components/UserCard";
+import UserCard from "../../../../components/UserCard";
 
 async function fetchCustomer(id) {
   const res = await fetch(
@@ -11,8 +11,8 @@ async function fetchCustomer(id) {
   return res.json();
 }
 
-export default async function ReadPage({ query }) {
-  const { id } = query;
+export default async function ReadPage({ params }) {
+  const { id } = params;
   const customerInfo = await fetchCustomer(id);
   
   // 顧客データをUserCardコンポーネントが期待する形式に変換
@@ -37,4 +37,4 @@ export default async function ReadPage({ query }) {
       </button>
     </>
   );
-}
+} 
