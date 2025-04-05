@@ -1,5 +1,5 @@
 export const dynamic = 'force-dynamic'
-import OneCustomerInfoCard from "@/app/components/one_customer_info_card.jsx";
+import UserCard from "@/components/UserCard";
 
 async function fetchCustomer(id) {
   const res = await fetch(
@@ -19,7 +19,7 @@ export default async function ReadPage({ query }) {
     <>
       <div className="alert alert-success">更新しました</div>
       <div className="card bordered bg-white border-blue-200 border-2 max-w-sm m-4">
-        <OneCustomerInfoCard {...customerInfo[0]} />
+        <UserCard {...customerInfo[0]} />
       </div>
       <button className="btn btn-outline btn-accent">
         <a href="/customers">一覧に戻る</a>

@@ -1,5 +1,5 @@
 "use client";
-import UserCard from "@/components/UserCard.jsx";
+import UserCard from "@/components/UserCard";
 import BackButton from "./back_button";
 import fetchCustomer from "./fetchCustomer";
 import { useEffect, useState, use } from "react";

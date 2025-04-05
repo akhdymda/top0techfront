@@ -1,5 +1,5 @@
 "use client";
-import UserCard from "@/components/UserCard.jsx";
+import UserCard from "@/components/UserCard";
 import fetchCustomer from "./fetchCustomer";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
