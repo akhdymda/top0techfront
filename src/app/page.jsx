@@ -117,7 +117,7 @@ export default function Home() {
 
               <div className="text-center">
                 <a
-                  href="/signup"
+                  href="/registar"
                   className="text-sm text-gray-400 hover:text-white transition-colors"
                 >
                   アカウントをお持ちでない方はこちら
