@@ -1,5 +1,5 @@
 "use client";
-import UserCard from "@/components/UserCard.jsx";
+import UserCard from "@/components/UserCard";
 import deleteCustomer from "./deleteCustomer";
 import fetchCustomer from "./fetchCustomer";
 import { useRouter } from "next/navigation";

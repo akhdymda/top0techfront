@@ -1,5 +1,5 @@
 "use client";
-import UserCard from "@/components/UserCard.jsx"; 
+import UserCard from "@/components/UserCard";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import fetchCustomers from "./fetchCustomers";
