@@ -1,5 +1,9 @@
 "use client";
+<<<<<<< HEAD
 import OneCustomerInfoCard from "@/app/components/one_customer_info_card.jsx";
+=======
+import UserCard from "../../../../../components/UserCard";
+>>>>>>> main
 import fetchCustomer from "./../fetchCustomer";
 import { useRouter } from "next/navigation";
 import { useEffect, useState, use } from "react";
@@ -31,7 +35,11 @@ function ConfirmPage(props) {
     <>
       <div className="card bordered bg-white border-blue-200 border-2 max-w-sm m-4">
         <div className="alert alert-success p-4 text-center">更新しました</div>
+<<<<<<< HEAD
         <OneCustomerInfoCard {...customer} />
+=======
+        <UserCard user={customer} />
+>>>>>>> main
         <a href="/customers" className="flex justify-center">
           <button className="btn btn-outline btn-accent">一覧に戻る</button>
         </a>

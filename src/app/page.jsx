@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { Sparkles, Mail, Lock, ArrowRight } from 'lucide-react';
 import Header from '../components/Header';
@@ -14,7 +14,7 @@ export default function Home() {
   const [rememberMe, setRememberMe] = useState(false);
 
   // 2秒後にローディングを解除
-  useState(() => {
+  useEffect(() => {
     const timer = setTimeout(() => {
       setLoading(false);
     }, 2000);
@@ -129,6 +129,3 @@ export default function Home() {
       </main>
 
       <Footer />
-    </div>
-  );
-}
