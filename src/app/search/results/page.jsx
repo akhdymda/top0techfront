@@ -102,3 +102,5 @@ function SearchResultsContent() {
     </div>
   );
 }
+
+export default SearchResultsContent;
