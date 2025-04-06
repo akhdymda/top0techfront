@@ -64,7 +64,7 @@ export default function Header() {
             href="/mypage" 
             className="text-gray-500 hover:text-gray-700"
           >
-            <span>My page/登録</span>
+            <span>My page</span>
           </Link>
         </div>
       </div>

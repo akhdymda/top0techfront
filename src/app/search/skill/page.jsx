@@ -75,8 +75,8 @@ export default function SkillPage() {
         <Header />
       </div>
 
-      <main className="relative flex-1 bg-black text-white pt-16">
-        <video
+      <main className="relative flex-1 bg-[#A5C05B] h-[250vh] text-white pt-16">
+        {/* <video
           autoPlay
           muted
           loop
@@ -84,9 +84,9 @@ export default function SkillPage() {
           className="absolute inset-0 w-full h-full object-cover"
         >
           <source src="https://cdn.coverr.co/videos/coverr-typing-on-computer-keyboard-2154/1080p.mp4" type="video/mp4" />
-        </video>
+        </video> */}
 
-        <div className="absolute inset-0 bg-gradient-to-b from-black/70 to-black/30 z-10" />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/40 to-black/10 z-10" />
 
         <div className="relative z-20 min-h-screen flex items-center justify-center bg-black/90">
           <div className="max-w-4xl w-full mx-auto px-6">

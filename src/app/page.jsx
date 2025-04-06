@@ -1,43 +1,6 @@
-'use client';
-
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
-import { Sparkles, Mail, Lock, ArrowRight } from 'lucide-react';
-import Header from '../components/Header';
-import Footer from '../components/Footer';
+import Image from "next/image";
 
 export default function Home() {
-  const router = useRouter();
-  const [loading, setLoading] = useState(true);
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [rememberMe, setRememberMe] = useState(false);
-
-  // 2秒後にローディングを解除
-  useState(() => {
-    const timer = setTimeout(() => {
-      setLoading(false);
-    }, 2000);
-    return () => clearTimeout(timer);
-  }, []);
-
-  const handleLogin = (e) => {
-    e.preventDefault();
-    // TODO: ログイン処理の実装
-    router.push('/search');
-  };
-
-  if (loading) {
-    return (
-      <div className="fixed inset-0 bg-black text-white flex items-center justify-center">
-        <div className="text-center">
-          <h1 className="text-4xl font-bold mb-4 animate-pulse">CHOTTO</h1>
-          <Sparkles className="animate-spin" size={32} />
-        </div>
-      </div>
-    );
-  }
-
   return (
     <div className="min-h-screen flex flex-col">
       <div className="fixed top-0 left-0 right-0 z-50">
@@ -115,15 +78,10 @@ export default function Home() {
                 <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
               </button>
 
-              <div className="text-center">
-                <a
-                  href="/signup"
-                  className="text-sm text-gray-400 hover:text-white transition-colors"
-                >
-                  アカウントをお持ちでない方はこちら
-                </a>
-              </div>
-            </form>
+          <div className="text-center mt-4">
+            <a href="/google" className="text-sm text-gray-600 hover:underline">
+              Login with Google »
+            </a>
           </div>
         </div>
       </main>
