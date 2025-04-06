@@ -188,13 +188,13 @@ export default function Search() {
             </button>
             <div className="flex flex-col md:flex-row gap-4 md:gap-12 w-full md:w-auto">
               <a
-                href="/skill-search"
+                href="/search/skill"
                 className="w-80 px-8 py-3 bg-[#A5C05B] text-white rounded-full hover:opacity-90 transition-opacity font-sans-jp text-center whitespace-nowrap"
               >
                 スキルから探す人はこちら
               </a>
               <a
-                href="/department-search"
+                href="search/department"
                 className="w-80 px-8 py-3 bg-[#7BA4A8] text-white rounded-full hover:opacity-90 transition-opacity font-sans-jp text-center whitespace-nowrap"
               >
                 部署から探す人はこちら
