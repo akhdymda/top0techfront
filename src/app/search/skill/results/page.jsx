@@ -33,16 +33,16 @@ function SkillSearchResultsContent() {
     }
   }, [skillName]);
 
-  if (loading) {
-    return (
-      <div className="fixed inset-0 bg-black text-white flex items-center justify-center">
-        <div className="text-center">
-          <h1 className="text-4xl font-bold mb-4 animate-pulse">CHOTTO</h1>
-          <Sparkles className="animate-spin" size={32} />
-        </div>
-      </div>
-    );
-  }
+  // if (loading) {
+  //   return (
+  //     <div className="fixed inset-0 bg-black text-white flex items-center justify-center">
+  //       <div className="text-center">
+  //         <h1 className="text-4xl font-bold mb-4 animate-pulse">CHOTTO</h1>
+  //         <Sparkles className="animate-spin" size={32} />
+  //       </div>
+  //     </div>
+  //   );
+  // }
 
   return (
     <div className="relative z-20 min-h-screen py-12">
@@ -110,9 +110,11 @@ export default function SkillSearchResultsPage() {
         </video>
         <div className="absolute inset-0 bg-gradient-to-b from-black/70 to-black/30 z-10" />
         
-        <Suspense fallback={<SearchResultsLoading />}>
-          <SkillSearchResultsContent />
-        </Suspense>
+        <div className="relative z-20 min-h-screen bg-black/90 pt-20">
+          <Suspense fallback={<SearchResultsLoading />}>
+            <SkillSearchResultsContent />
+          </Suspense>
+        </div>
       </main>
 
       <Footer />
