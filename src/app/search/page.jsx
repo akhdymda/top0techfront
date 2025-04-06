@@ -172,6 +172,7 @@ export default function Search() {
             <textarea
               value={query}
               onChange={(e) => setQuery(e.target.value)}
+              onKeyPress={handleKeyPress}
               placeholder={`あのスキル持った人いないかな？\nこないだ読んだあの本の話したいな。\nこのプロジェクトやってたのって誰だっけ？`}
               className="w-full h-32 md:h-48 pl-12 pr-4 pt-4 pb-4 bg-white/10 backdrop-blur-sm border-2 border-white/20 rounded-lg resize-none focus:outline-none focus:ring-2 focus:ring-white/30 text-white placeholder-white/15 whitespace-pre-line text-sm md:text-base"
             />
@@ -180,7 +181,7 @@ export default function Search() {
           <div className="mt-8 flex flex-col items-center gap-8 md:gap-12">
             <button
               onClick={() => router.push('/search/results')}
-              className="w-full md:w-auto px-8 md:px-28 py-3 bg-gradient-to-r from-white to-gray-100 text-black rounded-full hover:from-gray-100 hover:to-white transition-all duration-300 font-sans-jp text-base md:text-lg tracking-widest flex items-center justify-center gap-2 shadow-lg hover:shadow-xl transform hover:-translate-y-1"
+              className="px-28 py-3 bg-white text-black rounded-full hover:bg-gray-200 transition-colors font-sans-jp text-lg tracking-widest flex items-center gap-2"
             >
               <Cloud className="w-5 h-5 md:w-7 md:h-7" />
               ふわっと探す
@@ -188,19 +189,19 @@ export default function Search() {
             <div className="flex flex-col md:flex-row gap-4 md:gap-12 w-full md:w-auto">
               <a
                 href="/search/skill"
-                className="w-full md:w-80 px-8 py-3 bg-gradient-to-r from-[#A5C05B] to-[#8DA44B] text-white rounded-full hover:from-[#8DA44B] hover:to-[#A5C05B] transition-all duration-300 font-sans-jp text-center whitespace-nowrap shadow-lg hover:shadow-xl transform hover:-translate-y-1"
+                className="w-80 px-8 py-3 bg-[#A5C05B] text-white rounded-full hover:opacity-90 transition-opacity font-sans-jp text-center whitespace-nowrap"
               >
                 スキルから探す人はこちら
               </a>
               <a
-                href="/search/department"
-                className="w-full md:w-80 px-8 py-3 bg-gradient-to-r from-[#7BA4A8] to-[#5B8A8E] text-white rounded-full hover:from-[#5B8A8E] hover:to-[#7BA4A8] transition-all duration-300 font-sans-jp text-center whitespace-nowrap shadow-lg hover:shadow-xl transform hover:-translate-y-1"
+                href="search/department"
+                className="w-80 px-8 py-3 bg-[#7BA4A8] text-white rounded-full hover:opacity-90 transition-opacity font-sans-jp text-center whitespace-nowrap"
               >
                 部署から探す人はこちら
               </a>
               <a
                 href="/department-search"
-                className="w-full md:w-80 px-8 py-3 bg-gradient-to-r from-[#D09683] to-[#B87A67] text-white rounded-full hover:from-[#B87A67] hover:to-[#D09683] transition-all duration-300 font-sans-jp text-center whitespace-nowrap shadow-lg hover:shadow-xl transform hover:-translate-y-1"
+                className="w-80 px-8 py-3 bg-[#D09683] text-white rounded-full hover:opacity-90 transition-opacity font-sans-jp text-center whitespace-nowrap"
               >
                 読書仲間から探す人はこちら
               </a>

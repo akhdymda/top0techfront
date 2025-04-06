@@ -18,7 +18,7 @@ function SkillSearchResultsContent() {
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_ENDPOINT}/skills/${skillName}`);
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_ENDPOINT}/skills/${encodeURIComponent(skillName)}`);
         const data = await response.json();
         setUsers(data.users || []);
       } catch (error) {
@@ -44,6 +44,10 @@ function SkillSearchResultsContent() {
     );
   }
 
+  const handleUserClick = (userId) => {
+    router.push(`/user/${userId}`);
+  };
+
   return (
     <div className="relative z-20 min-h-screen py-12">
       <div className="max-w-6xl w-full mx-auto px-6">
@@ -58,7 +62,11 @@ function SkillSearchResultsContent() {
         {users.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {users.map((user) => (
-              <div key={user.id} className="bg-white/10 backdrop-blur-sm border-2 border-white/20 rounded-lg p-6 hover:bg-white/20 transition-all">
+              <div
+                key={user.id}
+                className="bg-white/10 backdrop-blur-sm border-2 border-white/20 rounded-lg p-6 hover:bg-white/20 transition-all cursor-pointer"
+                onClick={() => handleUserClick(user.id)}
+              >
                 <UserCard user={user} />
               </div>
             ))}
