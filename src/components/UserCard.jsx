@@ -1,9 +1,67 @@
 import Image from 'next/image';
 import SkillTag from './Tag';
 import { useRouter } from 'next/navigation';
+import React, { useState, useEffect } from 'react';
+import Link from 'next/link';
+import { StarIcon } from '@heroicons/react/24/solid';
+import { useAuth } from '../contexts/AuthContext';
 
-export default function UserCard({ user }) {
+export default function UserCard({ user, currentUserId }) {
   const router = useRouter();
+  const [isBookmarked, setIsBookmarked] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    if (currentUserId && user.id) {
+      checkBookmarkStatus();
+    }
+  }, [currentUserId, user.id]);
+
+  const checkBookmarkStatus = async () => {
+    try {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_ENDPOINT}/bookmarks/${currentUserId}/${user.id}/status`
+      );
+      const data = await response.json();
+      setIsBookmarked(data.is_bookmarked);
+    } catch (error) {
+      console.error('ブックマーク状態の確認に失敗しました:', error);
+    }
+  };
+
+  const toggleBookmark = async () => {
+    if (!currentUserId) {
+      alert('ブックマークするにはログインが必要です');
+      return;
+    }
+
+    setIsLoading(true);
+    try {
+      if (isBookmarked) {
+        // ブックマークを削除
+        await fetch(
+          `${process.env.NEXT_PUBLIC_API_ENDPOINT}/bookmarks/${currentUserId}/${user.id}`,
+          {
+            method: 'DELETE',
+          }
+        );
+        setIsBookmarked(false);
+      } else {
+        // ブックマークを追加
+        await fetch(
+          `${process.env.NEXT_PUBLIC_API_ENDPOINT}/bookmarks/${currentUserId}/${user.id}`,
+          {
+            method: 'POST',
+          }
+        );
+        setIsBookmarked(true);
+      }
+    } catch (error) {
+      console.error('ブックマークの更新に失敗しました:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   console.log('UserCard received user:', {
     id: user.id,
@@ -45,12 +103,15 @@ export default function UserCard({ user }) {
           </div>
         </div>
         <button 
-          className="text-gray-400 hover:text-gray-600"
-          onClick={(e) => {
-            e.stopPropagation(); // カードのクリックイベントが発火するのを防ぐ
-          }}
+          onClick={toggleBookmark}
+          disabled={isLoading}
+          className={`text-gray-400 hover:text-gray-600 ${
+            isBookmarked
+              ? 'text-yellow-400 hover:text-yellow-500'
+              : 'text-gray-400 hover:text-yellow-400'
+          }`}
         >
-          <span>☆</span>
+          <StarIcon className="h-6 w-6" />
         </button>
       </div>
 
@@ -62,19 +123,24 @@ export default function UserCard({ user }) {
 
       <button 
         className="w-full py-2 text-center bg-[#F87171] text-white rounded hover:bg-[#EF4444] transition-colors"
-        onClick={(e) => {
-          e.stopPropagation(); // カードのクリックイベントが発火するのを防ぐ
-        }}
       >
         相談依頼、みんなで聞いてください！
       </button>
 
       <div className="mt-4 flex justify-between items-center text-sm text-gray-500">
-        <span>これまで獲得したスキルスポイント</span>
+        <span>これまで獲得したサンクスポイント</span>
         <span className="flex items-center">
-          スキルスポイント
           <span className="ml-1 text-[#F87171] font-bold">{user.totalPoints || 100}</span>
         </span>
+      </div>
+
+      <div className="mt-6">
+        <Link
+          href={`/user/${user.id}`}
+          className="text-blue-600 hover:text-blue-800 font-medium"
+        >
+          詳細を見る →
+        </Link>
       </div>
     </div>
   );
