@@ -40,8 +40,8 @@ export default function Home() {
         <div className="relative z-20 min-h-screen flex items-center justify-center">
           <div className="max-w-md w-full mx-auto px-6">
             <div className="text-center mb-12">
-              <h1 className="text-6xl font-normal font-sans-jp mb-6 text-white tracking-widest">CHOTTO</h1>
-              <p className="text-xl text-gray-400 font-sans-jp mb-12">
+              <h1 className="text-5xl font-thin font-sans-jp mb-6 text-white tracking-[0.5em]">CHOTTO</h1>
+              <p className="text-base text-gray-200 font-sans-jp font-thin mb-12">
                 ちょっと聞きたい。ちょっと話したい。
                 <br />から何か生まれるかも。
               </p>

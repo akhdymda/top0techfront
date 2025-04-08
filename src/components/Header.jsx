@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { useAuth } from '../contexts/AuthContext';
+import Image from 'next/image';
 
 export default function Header() {
   const { user, logout } = useAuth();
@@ -10,7 +11,15 @@ export default function Header() {
 
   return (
     <header className="w-full px-4 py-2 flex justify-between items-center bg-white border-b">
-      <Link href="/search#search-section" className="flex items-center">
+      <Link href="/search#search-section" className="flex items-center gap-2">
+        <Image
+          src="/CHOTTOlogo2.png"
+          alt="CHOTTO"
+          width={40}
+          height={14}
+          className="h-auto"
+          priority
+        />
         <span className="text-2xl text-gray-700 font-medium">CHOTTO</span>
       </Link>
       
