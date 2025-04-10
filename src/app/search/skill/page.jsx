@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { Search as SearchIcon, Sparkles } from 'lucide-react';
+import { Search as SearchIcon, Sparkles, ArrowLeft } from 'lucide-react';
 import Header from '../../../components/Header';
 import Footer from '../../../components/Footer';
 import Tag from '../../../components/Tag';
@@ -13,23 +13,28 @@ export default function SkillPage() {
   const [skills, setSkills] = useState([]);
   const [selectedSkill, setSelectedSkill] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const [query, setQuery] = useState('');
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      fetchSkills();
-    }, 2000);
-    return () => clearTimeout(timer);
+    fetchSkills();
   }, []);
 
   const fetchSkills = async () => {
     try {
+      setLoading(true);
+      setError(null);
+      console.log('スキルデータを取得中...');
       const response = await fetch(`${process.env.NEXT_PUBLIC_API_ENDPOINT}/skills`);
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
       const data = await response.json();
-      console.log('取得したスキルデータ:', data);
+      console.log('スキルデータを取得しました:', data);
       setSkills(data);
     } catch (error) {
       console.error('スキルデータの取得に失敗しました:', error);
+      setError('スキルデータの取得に失敗しました。ページを更新してください。');
     } finally {
       setLoading(false);
     }
@@ -69,6 +74,29 @@ export default function SkillPage() {
     );
   }
 
+  if (error) {
+    return (
+      <div className="min-h-screen flex flex-col">
+        <div className="fixed top-0 left-0 right-0 z-50">
+          <Header />
+        </div>
+        <main className="relative flex-1 bg-black text-white pt-16">
+          <div className="max-w-4xl w-full mx-auto px-6 py-12 text-center">
+            <h2 className="text-2xl font-bold mb-4 text-red-500">エラーが発生しました</h2>
+            <p className="text-gray-400 mb-4">{error}</p>
+            <button
+              onClick={fetchSkills}
+              className="px-6 py-3 bg-white/10 backdrop-blur-sm border-2 border-white/20 rounded-lg hover:bg-white/20 transition-all text-white"
+            >
+              再読み込み
+            </button>
+          </div>
+        </main>
+        <Footer />
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen flex flex-col">
       <div className="fixed top-0 left-0 right-0 z-50">
@@ -76,17 +104,7 @@ export default function SkillPage() {
       </div>
 
       <main className="relative flex-1 bg-[#A5C05B] h-[250vh] text-white pt-16">
-        {/* <video
-          autoPlay
-          muted
-          loop
-          playsInline
-          className="absolute inset-0 w-full h-full object-cover"
-        >
-          <source src="https://cdn.coverr.co/videos/coverr-typing-on-computer-keyboard-2154/1080p.mp4" type="video/mp4" />
-        </video> */}
-
-        <div className="absolute inset-0 bg-gradient-to-b from-black/40 to-black/10 z-10" />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/20 to-black/10 z-10" />
 
         <div className="relative z-20 min-h-screen flex items-center justify-center bg-black/90">
           <div className="max-w-4xl w-full mx-auto px-6">
@@ -144,6 +162,16 @@ export default function SkillPage() {
               </div>
             )}
           </div>
+
+          <button
+            onClick={() => {
+              sessionStorage.setItem('skipIntro', 'true');
+              window.location.href = '/search#search-section';
+            }}
+            className="absolute bottom-8 right-8 bg-white/10 backdrop-blur-sm border-2 border-white/20 rounded-full p-4 hover:bg-white/20 transition-all text-white"
+          >
+            <ArrowLeft size={24} />
+          </button>
         </div>
       </main>
 

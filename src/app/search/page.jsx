@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 import { ArrowDown, ArrowUpRight, Search as SearchIcon, Sparkles, Cloud } from 'lucide-react';
 import Header from '../../components/Header';
 import Footer from '../../components/Footer';
@@ -15,23 +16,33 @@ export default function Search() {
   const router = useRouter();
 
   useEffect(() => {
-    console.log("ローディング開始");
-    const timer = setTimeout(() => {
-      console.log("isLoading false に変更されました");
+    const skipIntro = sessionStorage.getItem('skipIntro');
+    if (skipIntro === 'true') {
       setIsLoading(false);
-    }, 2000);
-    return () => clearTimeout(timer);
+      sessionStorage.removeItem('skipIntro');
+      const searchSection = document.getElementById('search-section');
+      if (searchSection) {
+        searchSection.scrollIntoView({ block: 'start' });
+      }
+    } else {
+      console.log("ローディング開始");
+      const timer = setTimeout(() => {
+        console.log("isLoading false に変更されました");
+        setIsLoading(false);
+      }, 2000);
+      return () => clearTimeout(timer);
+    }
   }, []);
 
   useEffect(() => {
-    if (!isLoading) {
+    if (!isLoading && !sessionStorage.getItem('skipIntro')) {
       const scrollTimer = setTimeout(() => {
         const searchSection = document.getElementById('search-section');
         searchSection?.scrollIntoView({ 
           behavior: 'smooth',
           block: 'start'
         });
-      }, 3000); // アニメーションの最後の要素（ArrowDown）のアニメーションが終わる1.6秒後に実行
+      }, 3000);
       return () => clearTimeout(scrollTimer);
     }
   }, [isLoading]);
@@ -41,16 +52,19 @@ export default function Search() {
       title: "Challenge",
       description: "これまでの取り組み",
       image: "https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&q=80&w=1920",
+      link: "/challenge"
     },
     {
-      title: "Growth",
-      description: "勉強会",
+      title: "Connect",
+      description: "ちょっと探してます",
       image: "https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&q=80&w=1920",
+      link: "/connect"
     },
     {
-      title: "Innovation",
-      description: "革新的なアイデアの実現",
+      title: "Recommend Book",
+      description: "おすすめ本や読書会のご案内",
       image: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&q=80&w=1920",
+      link:"/recommendedBook"
     }
   ];
 
@@ -78,6 +92,11 @@ export default function Search() {
   
   const handleSearch = () => {
     const searchQuery = query.trim() || 'all';
+    console.log('検索を実行:', {
+      query: searchQuery,
+      encodedQuery: encodeURIComponent(searchQuery),
+      url: `/search/results?q=${encodeURIComponent(searchQuery)}`
+    });
     router.push(`/search/results?q=${encodeURIComponent(searchQuery)}`);
   };
 
@@ -180,7 +199,7 @@ export default function Search() {
           </div>
           <div className="mt-8 flex flex-col items-center gap-8 md:gap-12">
             <button
-              onClick={() => router.push('/search/results')}
+              onClick={handleSearch}
               className="px-28 py-3 bg-white text-black rounded-full hover:bg-gray-200 transition-colors font-sans-jp text-lg tracking-widest flex items-center gap-2"
             >
               <Cloud className="w-5 h-5 md:w-7 md:h-7" />
@@ -229,21 +248,22 @@ export default function Search() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-20">
             <div className="space-y-6 md:space-y-8">
               {sections.map((section, index) => (
-                <div
+                <Link
                   key={section.title}
-                  className={`cursor-pointer transition-all duration-500 ${
+                  href={section.link}
+                  className={`cursor-pointer transition-all duration-500 block ${
                     activeSection === index ? 'opacity-100' : 'opacity-50'
                   }`}
                   onMouseEnter={() => setActiveSection(index)}
                 >
-                  <h3 className="text-2xl md:text-3xl font-bold flex items-center gap-2">
+                  <h3 className="text-2xl md:text-3xl font-bold flex items-center gap-2 hover:text-[#A5C05B] transition-colors">
                     {section.title}
                     <ArrowUpRight className={`transition-transform ${
                       activeSection === index ? 'translate-x-1 -translate-y-1' : ''
                     }`} />
                   </h3>
                   <p className="text-sm md:text-base text-gray-400">{section.description}</p>
-                </div>
+                </Link>
               ))}
             </div>
             <div className="relative h-[300px] md:h-[600px] overflow-hidden rounded-2xl">

@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useRef, useEffect } from 'react';
-import { Calendar, Clock, Coffee, Mail, MessageCircle, Edit2, Plus, Trash2 } from 'lucide-react';
+import { Calendar, Clock, Coffee, Mail, MessageCircle, Edit2, Plus, Trash2, Bookmark } from 'lucide-react';
 import Header from '../../components/Header';
 import Footer from '../../components/Footer';
 import { WELCOME_MESSAGES } from '../../constants/welcomeMessages';
@@ -18,6 +18,8 @@ const CONSULTATION_TYPES = ['Teams', 'メール', 'オンライン', '対面'];
 export default function MyPage() {
   const [isEditing, setIsEditing] = useState(false);
   const [isWelcomeMessageOpen, setIsWelcomeMessageOpen] = useState(false);
+  const [isBookmarked, setIsBookmarked] = useState(false);
+  const [bookmarkDate, setBookmarkDate] = useState(null);
   const welcomeMessageRef = useRef(null);
   const [errors, setErrors] = useState({});
   const [formData, setFormData] = useState({
@@ -181,7 +183,32 @@ export default function MyPage() {
           </div>
           
           {/* Profile Header */}
-          <div className="bg-white/80 backdrop-blur rounded-2xl shadow-sm border border-[#e6dfd4] p-8 mb-6">
+          <div className="bg-white/80 backdrop-blur rounded-2xl shadow-sm border border-[#e6dfd4] p-8 mb-6 relative">
+            <button
+              onClick={() => {
+                setIsBookmarked(!isBookmarked);
+                if (!isBookmarked) {
+                  setBookmarkDate(new Date());
+                } else {
+                  setBookmarkDate(null);
+                }
+              }}
+              className="absolute top-4 right-4 p-2 hover:bg-gray-100 rounded-full transition-colors flex items-center gap-2"
+            >
+              {isBookmarked && (
+                <span className="text-sm text-gray-500">
+                  {bookmarkDate?.toLocaleDateString('ja-JP', {
+                    year: 'numeric',
+                    month: '2-digit',
+                    day: '2-digit'
+                  }).replace(/\//g, '/')}
+                </span>
+              )}
+              <Bookmark
+                size={24}
+                className={isBookmarked ? 'text-[#FF6058] fill-[#FF6058]' : 'text-gray-400'}
+              />
+            </button>
             <div className="flex items-start gap-8">
               <img
                 src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&q=80&w=200&h=200"
@@ -290,9 +317,9 @@ export default function MyPage() {
               <div className="bg-white/80 backdrop-blur rounded-2xl shadow-sm border border-[#e6dfd4] p-6">
                 <h2 className="text-xl font-semibold mb-4 text-[#4a4541]">サンクスポイント</h2>
                 <div className="bg-[#faf7f2] rounded-lg p-6 border border-[#e6dfd4]">
-                  <div className="flex items-end gap-2 mb-2">
+                  <div className="flex items-end gap-2 mb-2 ml-auto w-fit">
                     <div className="text-6xl font-bold text-[#4a4541]">0</div>
-                    <div className="bg-[#6b635d] rounded-full w-12 h-12 flex items-center justify-center mb-1">
+                    <div className="bg-[#FF6058] rounded-full w-12 h-12 flex items-center justify-center mb-1 shadow-md shadow-gray-600/50">
                       <span className="text-white text-xs font-bold text-center">
                         Thank<br />You
                       </span>
