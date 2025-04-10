@@ -5,30 +5,91 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { ArrowLeft, Sparkles } from 'lucide-react';
 import Header from '../../../components/Header';
 import Footer from '../../../components/Footer';
-import UserCard from '../../../components/UserCard';
+import SearchUserCard from '../../../components/SearchUserCard';
 
 function SearchResultsContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const query = searchParams.get('q');
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
-  const query = searchParams.get('q');
 
   useEffect(() => {
     const fetchResults = async () => {
-      if (query) {
-        setLoading(true);
-        try {
-          console.log('検索クエリ:', query);
-          const response = await fetch(`${process.env.NEXT_PUBLIC_API_ENDPOINT}/search?q=${encodeURIComponent(query)}`);
-          const data = await response.json();
-          console.log('API Response:', JSON.stringify(data, null, 2));
-          setUsers(data || []);
-        } catch (error) {
-          console.error('検索エラー:', error);
-        } finally {
-          setLoading(false);
+      setLoading(true);
+      try {
+        let searchQuery = query?.trim() || 'all';
+        
+        if (searchQuery.length === 0 || /^\s+$/.test(searchQuery)) {
+          searchQuery = 'all';
         }
+
+        const encodedQuery = encodeURIComponent(searchQuery);
+        const baseUrl = process.env.NEXT_PUBLIC_API_ENDPOINT.replace(/\/$/, '');
+        const apiUrl = `${baseUrl}/search?query=${encodedQuery}`;
+        
+        console.log('リクエスト詳細:', {
+          originalQuery: query,
+          processedQuery: searchQuery,
+          encodedQuery: encodedQuery,
+          fullUrl: apiUrl
+        });
+
+        const response = await fetch(apiUrl, {
+          method: 'GET',
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+          }
+        });
+
+        console.log('Response status:', response.status);
+        console.log('Response headers:', Object.fromEntries(response.headers.entries()));
+
+        if (!response.ok) {
+          const errorData = await response.json();
+          console.error('APIエラーレスポンス:', errorData);
+          throw new Error(`HTTP error! status: ${response.status}, message: ${JSON.stringify(errorData)}`);
+        }
+
+        const data = await response.json();
+        console.log('API Response:', JSON.stringify(data, null, 2));
+        
+        if (!data.results) {
+          console.warn('Warning: レスポンスにresultsプロパティがありません:', data);
+          setUsers([]);
+          return;
+        }
+
+        // 重複を除去し、UserCardコンポーネントの期待する形式にデータを変換
+        const uniqueUsers = Array.from(new Set(data.results.map(user => user.user_id)))
+          .map(userId => {
+            const userEntries = data.results.filter(entry => entry.user_id === userId);
+            const firstEntry = userEntries[0];
+            
+            return {
+              id: firstEntry.user_id,
+              name: firstEntry.user_name,
+              department: firstEntry.department_name,
+              skills: userEntries.map(entry => ({
+                id: entry.skill_id,
+                name: entry.skill_name
+              })),
+              similarity_score: firstEntry.similarity_score
+            };
+          });
+        
+        console.log('Processed users:', uniqueUsers);
+        setUsers(uniqueUsers);
+      } catch (error) {
+        console.error('検索エラー:', error);
+        console.error('エラーの詳細:', {
+          message: error.message,
+          stack: error.stack
+        });
+        setUsers([]);
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -46,10 +107,6 @@ function SearchResultsContent() {
     );
   }
 
-  const handleUserClick = (userId) => {
-    router.push(`/user/${userId}`);
-  };
-
   return (
     <div className="relative z-20 min-h-screen py-12">
       <div className="max-w-6xl w-full mx-auto px-6">
@@ -64,13 +121,7 @@ function SearchResultsContent() {
         {users && users.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {users.map((user) => (
-              <div
-                key={user.id}
-                className="bg-white/10 backdrop-blur-sm border-2 border-white/20 rounded-lg p-6 hover:bg-white/20 transition-all cursor-pointer"
-                onClick={() => handleUserClick(user.id)}
-              >
-                <UserCard user={user} />
-              </div>
+              <SearchUserCard key={user.id} user={user} />
             ))}
           </div>
         ) : (

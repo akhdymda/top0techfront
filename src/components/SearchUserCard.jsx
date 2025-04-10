@@ -6,23 +6,22 @@ import Link from 'next/link';
 import { StarIcon } from '@heroicons/react/24/solid';
 import { useAuth } from '../contexts/AuthContext';
 
-export default function UserCard({ user, currentUserId }) {
+export default function SearchUserCard({ user }) {
   const router = useRouter();
   const [isBookmarked, setIsBookmarked] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const { user: authUser } = useAuth();
-  const effectiveUserId = currentUserId || authUser?.id;
+  const { user: currentUser } = useAuth();
 
   useEffect(() => {
-    if (effectiveUserId && user.id) {
+    if (currentUser?.id && user.id) {
       checkBookmarkStatus();
     }
-  }, [effectiveUserId, user.id]);
+  }, [currentUser?.id, user.id]);
 
   const checkBookmarkStatus = async () => {
     try {
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_ENDPOINT}/bookmarks/${effectiveUserId}/${user.id}/status`
+        `${process.env.NEXT_PUBLIC_API_ENDPOINT}/bookmarks/${currentUser.id}/${user.id}/status`
       );
       const data = await response.json();
       setIsBookmarked(data.is_bookmarked);
@@ -33,16 +32,30 @@ export default function UserCard({ user, currentUserId }) {
 
   const toggleBookmark = async (e) => {
     e.stopPropagation();
-    if (!effectiveUserId) {
+    if (!currentUser?.id) {
       alert('ブックマークするにはログインが必要です');
       return;
     }
 
     setIsLoading(true);
     try {
-      const url = `${process.env.NEXT_PUBLIC_API_ENDPOINT}/bookmarks/${effectiveUserId}/${user.id}`;
-      await fetch(url, { method: isBookmarked ? 'DELETE' : 'POST' });
-      setIsBookmarked(!isBookmarked);
+      if (isBookmarked) {
+        await fetch(
+          `${process.env.NEXT_PUBLIC_API_ENDPOINT}/bookmarks/${currentUser.id}/${user.id}`,
+          {
+            method: 'DELETE',
+          }
+        );
+        setIsBookmarked(false);
+      } else {
+        await fetch(
+          `${process.env.NEXT_PUBLIC_API_ENDPOINT}/bookmarks/${currentUser.id}/${user.id}`,
+          {
+            method: 'POST',
+          }
+        );
+        setIsBookmarked(true);
+      }
     } catch (error) {
       console.error('ブックマークの更新に失敗しました:', error);
     } finally {
@@ -50,21 +63,21 @@ export default function UserCard({ user, currentUserId }) {
     }
   };
 
-  const displayName = user.name || '名前未設定';
-
-  const handleCardClick = () => {
-    router.push(`/user/${user.id}`);
+  const handleUserClick = (userId) => {
+    router.push(`/user/${userId}`);
   };
+
+  const displayName = user.name || '名前未設定';
 
   return (
     <div
       className="bg-white rounded-lg p-4 shadow-sm cursor-pointer transition-transform hover:scale-105"
-      onClick={handleCardClick}
+      onClick={() => handleUserClick(user.id)}
     >
       <div className="flex justify-between items-start mb-4">
         <div className="flex gap-4">
           <Image
-            src={user.image || "/default-avatar.png"}
+            src={user.image || '/default-avatar.png'}
             alt={displayName}
             width={60}
             height={60}
@@ -78,10 +91,11 @@ export default function UserCard({ user, currentUserId }) {
             <p className="text-sm text-gray-600">入社形態：{user.joinForm || '未設定'}</p>
           </div>
         </div>
+
         <button
           onClick={toggleBookmark}
           disabled={isLoading}
-          className={`text-gray-400 hover:text-gray-600 ${
+          className={`${
             isBookmarked
               ? 'text-yellow-400 hover:text-yellow-500'
               : 'text-gray-400 hover:text-yellow-400'
@@ -91,37 +105,27 @@ export default function UserCard({ user, currentUserId }) {
         </button>
       </div>
 
+      {/* ✅ 重複除外済みスキル表示 */}
       <div className="flex flex-wrap gap-2 mb-4 rounded-lg bg-gray-100 p-2">
-        {user.skills && user.skills.map((skill, index) => (
-          <SkillTag key={index} text={typeof skill === 'string' ? skill : skill.name} />
+        {[...new Set(user.skills?.map(skill => skill.name))].map((skillName, index) => (
+          <SkillTag key={index} text={skillName} />
         ))}
       </div>
 
-      <button
-        className="w-full py-2 text-center bg-[#F87171] text-white rounded hover:bg-[#EF4444] transition-colors"
-      >
+      <button className="w-full py-2 text-center bg-[#F87171] text-white rounded hover:bg-[#EF4444] transition-colors">
         相談依頼、みんなで聞いてください！
       </button>
 
-      {/* スコア情報の表示（両方） */}
-      <div className="mt-4 text-sm text-gray-500 space-y-1">
-        {user.similarity_score !== undefined && (
-          <div className="flex justify-between">
-            <span>マッチ度</span>
-            <span className="text-[#F87171] font-bold">
+      {user.similarity_score && (
+        <div className="mt-4 flex justify-between items-center text-sm text-gray-500">
+          <span>マッチ度</span>
+          <span className="flex items-center">
+            <span className="ml-1 text-[#F87171] font-bold">
               {Math.round(user.similarity_score * 100)}%
             </span>
-          </div>
-        )}
-        {user.totalPoints !== undefined && (
-          <div className="flex justify-between">
-            <span>これまで獲得したサンクスポイント</span>
-            <span className="text-[#F87171] font-bold">
-              {user.totalPoints}
-            </span>
-          </div>
-        )}
-      </div>
+          </span>
+        </div>
+      )}
 
       <div className="mt-6">
         <Link
