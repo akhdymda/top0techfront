@@ -25,8 +25,7 @@ export default function SkillPage() {
       setLoading(true);
       setError(null);
       console.log('スキルデータを取得中...');
-      const apiEndpoint = process.env.NEXT_PUBLIC_API_ENDPOINT.replace(/\/$/, '');
-      const response = await fetch(`${apiEndpoint}/skills`);
+      const response = await fetch('/api/skills');
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
