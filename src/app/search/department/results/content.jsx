@@ -1,12 +1,12 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { ArrowLeft, Sparkles } from 'lucide-react';
 import UserCard from '../../../../components/UserCard';
 import Tag from '../../../../components/Tag';
 
-export default function DepartmentSearchResultsContent() {
+function DepartmentSearchResultsInner() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const departmentName = searchParams.get('q');
@@ -89,5 +89,20 @@ export default function DepartmentSearchResultsContent() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function DepartmentSearchResultsContent() {
+  return (
+    <Suspense fallback={
+      <div className="fixed inset-0 bg-black text-white flex items-center justify-center">
+        <div className="text-center">
+          <h1 className="text-4xl font-bold mb-4 animate-pulse">CHOTTO</h1>
+          <Sparkles className="animate-spin" size={32} />
+        </div>
+      </div>
+    }>
+      <DepartmentSearchResultsInner />
+    </Suspense>
   );
 }
