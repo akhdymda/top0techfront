@@ -5,17 +5,31 @@ import { useRouter } from 'next/navigation';
 import { Mail, Lock, ArrowRight } from 'lucide-react';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
+import { signIn } from 'next-auth/react';
 
 export default function Home() {
   const router = useRouter();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [rememberMe, setRememberMe] = useState(false);
+  const [errorMessage, setErrorMessage] = useState(''); // 🔸追加
 
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
-    // TODO: ログイン処理の実装
-    router.push('/search');
+    setErrorMessage(''); // 🔸毎回初期化
+
+    const result = await signIn('credentials', {
+      redirect: false,
+      email,
+      password,
+    });
+
+    if (result.error) {
+      console.error('ログインエラー:', result.error);
+      setErrorMessage('メールアドレスまたはパスワードが正しくありません。'); // 🔸UI表示用
+    } else {
+      router.push('/search');
+    }
   };
 
   return (
@@ -48,6 +62,10 @@ export default function Home() {
             </div>
 
             <form onSubmit={handleLogin} className="space-y-6">
+              {errorMessage && (
+                <div className="text-red-400 text-sm text-center">{errorMessage}</div> // 🔸エラー表示
+              )}
+
               <div className="relative">
                 <Mail className="absolute left-4 top-1/2 transform -translate-y-1/2 text-white/50" size={20} />
                 <input
