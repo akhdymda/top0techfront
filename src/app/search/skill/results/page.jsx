@@ -18,7 +18,8 @@ function SkillSearchResultsContent() {
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_ENDPOINT}/skills/${encodeURIComponent(skillName)}`);
+        const apiEndpoint = process.env.NEXT_PUBLIC_API_ENDPOINT.replace(/\/$/, '');
+        const response = await fetch(`${apiEndpoint}/skills/${encodeURIComponent(skillName)}`);
         const data = await response.json();
         setUsers(data.users || []);
       } catch (error) {
