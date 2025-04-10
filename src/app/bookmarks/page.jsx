@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import UserCard from '../../components/UserCard';
+import UserCard from '../../../components/UserCard';
 import { useAuth } from '../../../contexts/AuthContext';
 
 export default function BookmarksPage() {
