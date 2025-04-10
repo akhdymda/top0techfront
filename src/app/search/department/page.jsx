@@ -22,8 +22,7 @@ export default function DepartmentPage() {
       setLoading(true);
       setError(null);
       console.log('部署データを取得中...');
-      const apiEndpoint = process.env.NEXT_PUBLIC_API_ENDPOINT.replace(/\/$/, '');
-      const response = await fetch(`${apiEndpoint}/departments`);
+      const response = await fetch('/api/departments');
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }

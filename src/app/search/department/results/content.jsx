@@ -19,7 +19,7 @@ export default function DepartmentSearchResultsContent() {
         setLoading(true);
         try {
           console.log('Fetching department:', departmentName);
-          const response = await fetch(`${process.env.NEXT_PUBLIC_API_ENDPOINT}/departments/${encodeURIComponent(departmentName)}`);
+          const response = await fetch(`/api/departments/${encodeURIComponent(departmentName)}`);
           const data = await response.json();
           console.log('API Response:', JSON.stringify(data, null, 2));
           setUsers(data.users || []);
