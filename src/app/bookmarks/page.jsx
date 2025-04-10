@@ -1,121 +1,93 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
-import UserCard from '@/components/UserCard';
-import { useAuth } from '../../../contexts/AuthContext';
+import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
+import Header from '../../components/Header';
+import Footer from '../../components/Footer';
+import UserCard from '../../components/UserCard';
+import { useAuth } from '../../contexts/AuthContext';
 
 export default function BookmarksPage() {
-  const [bookmarks, setBookmarks] = useState([]);
+  const router = useRouter();
+  const [bookmarkedUsers, setBookmarkedUsers] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
   const { user } = useAuth();
 
   useEffect(() => {
-    if (user?.id) {
-      fetchBookmarks();
-    }
-  }, [user?.id]);
-
-  const fetchBookmarks = async () => {
-    try {
-      setLoading(true);
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_ENDPOINT}/bookmarks/${user.id}`
-      );
-      if (!response.ok) {
-        throw new Error('ブックマークの取得に失敗しました');
+    const fetchBookmarkedUsers = async () => {
+      if (!user?.id) {
+        setLoading(false);
+        return;
       }
-      const data = await response.json();
-      setBookmarks(data.bookmarks);
-    } catch (error) {
-      console.error('ブックマークの取得中にエラーが発生しました:', error);
-      setError(error.message);
-    } finally {
-      setLoading(false);
-    }
-  };
+
+      try {
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_API_ENDPOINT}/bookmarks/${user.id}`
+        );
+        if (!response.ok) {
+          throw new Error('ブックマークの取得に失敗しました');
+        }
+        const data = await response.json();
+        setBookmarkedUsers(data);
+      } catch (error) {
+        console.error('Error fetching bookmarked users:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchBookmarkedUsers();
+  }, [user?.id]);
 
   if (!user) {
     return (
-      <div className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center">
-            <h2 className="text-3xl font-bold text-gray-900">
-              ブックマーク一覧
-            </h2>
-            <p className="mt-4 text-lg text-gray-600">
-              ブックマークを表示するにはログインが必要です
-            </p>
-          </div>
+      <div className="min-h-screen bg-gradient-to-br from-gray-900 to-gray-800">
+        <Header />
+        <div className="flex items-center justify-center min-h-[calc(100vh-200px)]">
+          <p className="text-white text-xl">ログインが必要です</p>
         </div>
+        <Footer />
       </div>
     );
   }
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center">
-            <h2 className="text-3xl font-bold text-gray-900">
-              ブックマーク一覧
-            </h2>
-            <p className="mt-4 text-lg text-gray-600">読み込み中...</p>
-          </div>
+      <div className="min-h-screen bg-gradient-to-br from-gray-900 to-gray-800">
+        <Header />
+        <div className="flex items-center justify-center min-h-[calc(100vh-200px)]">
+          <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-white"></div>
         </div>
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center">
-            <h2 className="text-3xl font-bold text-gray-900">
-              ブックマーク一覧
-            </h2>
-            <p className="mt-4 text-lg text-red-600">{error}</p>
-            <button
-              onClick={fetchBookmarks}
-              className="mt-4 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
-            >
-              再読み込み
-            </button>
-          </div>
-        </div>
+        <Footer />
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-7xl mx-auto">
-        <div className="text-center mb-12">
-          <h2 className="text-3xl font-bold text-gray-900">
-            ブックマーク一覧
-          </h2>
-          <p className="mt-4 text-lg text-gray-600">
-            気になるユーザーをチェックしましょう
-          </p>
-        </div>
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 to-gray-800">
+      <Header />
+      <div className="max-w-6xl w-full mx-auto px-6 py-12">
+        <h1 className="text-4xl font-normal font-sans-jp mb-12 text-white tracking-widest text-center">
+          ブックマーク
+        </h1>
 
-        {bookmarks.length === 0 ? (
-          <div className="text-center">
-            <p className="text-gray-600">ブックマークはまだありません</p>
-          </div>
-        ) : (
+        {bookmarkedUsers.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {bookmarks.map((bookmark) => (
-              <UserCard
-                key={bookmark.id}
-                user={bookmark}
+            {bookmarkedUsers.map((user) => (
+              <UserCard 
+                key={user.id} 
+                user={user}
                 currentUserId={user.id}
               />
             ))}
           </div>
+        ) : (
+          <div className="text-center text-gray-400">
+            <p>ブックマークしたユーザーはいません</p>
+          </div>
         )}
       </div>
+      <Footer />
     </div>
   );
 } 
