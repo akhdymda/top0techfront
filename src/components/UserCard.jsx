@@ -58,7 +58,7 @@ export default function UserCard({ user, currentUserId }) {
 
   return (
     <div
-      className="bg-white rounded-lg p-4 shadow-sm cursor-pointer transition-transform hover:scale-105"
+      className="bg-white/80 backdrop-blur rounded-2xl p-4 shadow-sm border border-[#6b635d]/20 cursor-pointer transition-transform hover:scale-105 w-[300px] h-[400px] flex flex-col"
       onClick={handleCardClick}
     >
       <div className="flex justify-between items-start mb-4">
@@ -70,45 +70,45 @@ export default function UserCard({ user, currentUserId }) {
             height={60}
             className="rounded"
           />
-          <div>
-            <h3 className="font-bold text-lg text-gray-900">{displayName}</h3>
-            <p className="text-sm text-gray-600">{user.department}</p>
-            <p className="text-sm text-gray-600">社歴：{user.yearsOfService || '-'}年目</p>
-            <p className="text-sm text-gray-600">専業：{user.specialty || '-'}</p>
-            <p className="text-sm text-gray-600">入社形態：{user.joinForm || '未設定'}</p>
+          <div className="flex-1">
+            <h3 className="font-bold text-lg text-[#6b635d]">{displayName}</h3>
+            <p className="text-sm text-[#6b635d]/80">{user.department}</p>
+            <p className="text-sm text-[#6b635d]/80">社歴：{user.yearsOfService || '-'}年目</p>
+            <p className="text-sm text-[#6b635d]/80">専業：{user.specialty || '-'}</p>
+            <p className="text-sm text-[#6b635d]/80">入社形態：{user.joinForm || '未設定'}</p>
           </div>
         </div>
         <button
           onClick={toggleBookmark}
           disabled={isLoading}
-          className={`text-gray-400 hover:text-gray-600 ${
+          className={`text-[#6b635d]/40 hover:text-[#6b635d]/60 ${
             isBookmarked
-              ? 'text-yellow-400 hover:text-yellow-500'
-              : 'text-gray-400 hover:text-yellow-400'
+              ? 'text-[#6b635d] hover:text-[#6b635d]/80'
+              : 'text-[#6b635d]/40 hover:text-[#6b635d]/60'
           }`}
         >
           <StarIcon className="h-6 w-6" />
         </button>
       </div>
 
-      <div className="flex flex-wrap gap-2 mb-4 rounded-lg bg-gray-100 p-2">
+      <div className="flex flex-wrap gap-2 mb-4 rounded-lg bg-[#6b635d]/10 p-2 flex-1">
         {user.skills && user.skills.map((skill, index) => (
           <SkillTag key={index} text={typeof skill === 'string' ? skill : skill.name} />
         ))}
       </div>
 
       <button
-        className="w-full py-2 text-center bg-[#F87171] text-white rounded hover:bg-[#EF4444] transition-colors"
+        className="w-full py-2 text-center bg-[#6b635d] text-white rounded-lg hover:bg-[#6b635d]/80 transition-colors"
       >
         相談依頼、みんなで聞いてください！
       </button>
 
       {/* スコア情報の表示（両方） */}
-      <div className="mt-4 text-sm text-gray-500 space-y-1">
+      <div className="mt-4 text-sm text-[#6b635d]/80 space-y-1">
         {user.similarity_score !== undefined && (
           <div className="flex justify-between">
             <span>マッチ度</span>
-            <span className="text-[#F87171] font-bold">
+            <span className="text-[#6b635d] font-bold">
               {Math.round(user.similarity_score * 100)}%
             </span>
           </div>
@@ -116,7 +116,7 @@ export default function UserCard({ user, currentUserId }) {
         {user.totalPoints !== undefined && (
           <div className="flex justify-between">
             <span>これまで獲得したサンクスポイント</span>
-            <span className="text-[#F87171] font-bold">
+            <span className="text-[#6b635d] font-bold">
               {user.totalPoints}
             </span>
           </div>
@@ -126,7 +126,7 @@ export default function UserCard({ user, currentUserId }) {
       <div className="mt-6">
         <Link
           href={`/user/${user.id}`}
-          className="text-blue-600 hover:text-blue-800 font-medium"
+          className="text-[#6b635d] hover:text-[#6b635d]/80 font-medium"
         >
           詳細を見る →
         </Link>

@@ -63,7 +63,7 @@ export default function Search() {
     {
       title: "Recommend Book",
       description: "おすすめ本や読書会のご案内",
-      image: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&q=80&w=1920",
+      image: "book.png",
       link:"/recommendedBook"
     }
   ];

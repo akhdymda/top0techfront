@@ -335,7 +335,7 @@ export default function MyPage() {
           <div className="bg-white/80 backdrop-blur rounded-2xl shadow-sm border border-[#6b635d]/20 p-6">
             <h2 className="text-xl font-semibold mb-4 text-[#6b635d]">CHOTTOひとこと</h2>
             <div className="space-y-4">
-              <p className="text-[#6b635d]/60 text-left py-4">
+              <p className="text-[#6b635d]/80 text-left py-4">
                 新しいことに挑戦するのが好きです。私自身も色んな方と一緒に経験を積んでいきたいので、声かけて頂くのは大歓迎です！休日は、走ってます。マラソン仲間も募集中！
               </p>
             </div>
@@ -652,7 +652,7 @@ export default function MyPage() {
                 </div>
               </div>
               <div>
-                <label className="block text-sm font-medium text-[#6b635d] mb-1">自己紹介メッセージ</label>
+                <label className="block text-sm font-medium text-[#6b635d] mb-1">CHOTTOひとこと</label>
                 <textarea
                   value={formData.message}
                   onChange={(e) => handleInputChange('message', e.target.value)}
