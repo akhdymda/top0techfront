@@ -11,8 +11,14 @@ export default function UserDetailPage() {
   const router = useRouter();
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const { user: currentUser } = useAuth();
   const [isBookmarked, setIsBookmarked] = useState(false);
+
+  const getWelcomeMessage = (welcomeLevel) => {
+    if (!welcomeLevel) return '相談歓迎しています！';
+    return welcomeLevel;
+  };
 
   useEffect(() => {
     fetchUserDetails();
@@ -23,12 +29,31 @@ export default function UserDetailPage() {
 
   const fetchUserDetails = async () => {
     try {
+      setLoading(true);
+      setError(null);
+      console.log('Fetching user details for ID:', id);
+      console.log('API Endpoint:', `${process.env.NEXT_PUBLIC_API_ENDPOINT}/users/${id}`);
+      
       const response = await fetch(`${process.env.NEXT_PUBLIC_API_ENDPOINT}/users/${id}`);
-      if (!response.ok) throw new Error('ユーザー情報の取得に失敗しました');
+      console.log('Response status:', response.status);
+      console.log('Response headers:', response.headers);
+      
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error('Error response:', errorText);
+        throw new Error(`ユーザー情報の取得に失敗しました: ${response.status} ${errorText}`);
+      }
+      
       const data = await response.json();
+      console.log('Response data:', data);
+      
+      if (!data) {
+        throw new Error('ユーザーが見つかりません');
+      }
       setUser(data);
     } catch (error) {
       console.error('Error:', error);
+      setError(error.message);
     } finally {
       setLoading(false);
     }
@@ -72,11 +97,30 @@ export default function UserDetailPage() {
   };
 
   if (loading) {
-    return <div className="p-8 text-center">Loading...</div>;
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-900"></div>
+          <p className="mt-4 text-gray-600">読み込み中...</p>
+        </div>
+      </div>
+    );
   }
 
-  if (!user) {
-    return <div className="p-8 text-center">ユーザーが見つかりません</div>;
+  if (error || !user) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <p className="text-red-500 mb-4">{error || 'ユーザーが見つかりません'}</p>
+          <button
+            onClick={() => router.back()}
+            className="bg-gray-700 text-white px-4 py-2 rounded hover:bg-gray-800 transition-colors"
+          >
+            戻る
+          </button>
+        </div>
+      </div>
+    );
   }
 
   return (
@@ -96,10 +140,13 @@ export default function UserDetailPage() {
           <div className="flex items-center space-x-4">
             <div className="relative w-24 h-24">
               <Image
-                src={user.imageUrl || '/default-avatar.png'}
+                src={user.imageUrl || '/photo.jpg'}
                 alt={user.name}
                 fill
                 className="rounded-full object-cover"
+                onError={(e) => {
+                  e.target.src = '/photo.jpg';
+                }}
               />
             </div>
             <div>
@@ -123,13 +170,13 @@ export default function UserDetailPage() {
 
         {/* メッセージ部分 */}
         <div className="bg-[#F5F5F4] p-4 rounded-lg mb-6 border border-gray-200">
-          <p className="text-gray-800 text-center">相談歓迎しています！</p>
+          <p className="text-gray-800 text-center">{getWelcomeMessage(user.welcome_level)}</p>
         </div>
 
         {/* 説明文部分 */}
         <div className="bg-[#F5F5F4] p-4 rounded-lg mb-6 border border-gray-200">
           <p className="text-gray-800">
-            プロジェクト管理やチーム運営について、お気軽にご相談ください。経験を活かしてサポートさせていただきます。
+            {user.message || 'プロジェクト管理やチーム運営について、お気軽にご相談ください。経験を活かしてサポートさせていただきます。'}
           </p>
         </div>
 
@@ -157,12 +204,12 @@ export default function UserDetailPage() {
         <div className="mt-8 p-4 border border-gray-200 rounded-lg">
           <h2 className="text-lg font-semibold mb-4">得意分野</h2>
           <div className="flex flex-wrap gap-2">
-            {user.skills.map((skill, index) => (
+            {user.skills?.map((skill, index) => (
               <span
                 key={index}
                 className="bg-blue-100 text-blue-800 text-sm px-3 py-1 rounded-full"
               >
-                {skill}
+                {skill.name || skill}
               </span>
             ))}
           </div>
@@ -189,19 +236,19 @@ export default function UserDetailPage() {
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
               </svg>
-              <span>月・水・金</span>
+              <span>{user.consultationDays?.join('・') || '月・水・金'}</span>
             </div>
             <div className="flex items-center space-x-2 mt-2 text-gray-600">
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
-              <span>14:00 - 17:00</span>
+              <span>{user.consultationTimeStart} - {user.consultationTimeEnd}</span>
             </div>
             <div className="flex items-center space-x-2 mt-2 text-gray-600">
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
               </svg>
-              <span>オンライン / 対面</span>
+              <span>{user.consultationType?.join(' / ') || 'オンライン / 対面'}</span>
             </div>
           </div>
         </div>
@@ -211,7 +258,7 @@ export default function UserDetailPage() {
           <h2 className="text-lg font-semibold mb-4">サンクスポイント</h2>
           <div className="bg-white rounded-lg p-4 border border-gray-100">
             <div className="text-center">
-              <div className="text-4xl font-bold text-gray-900">0</div>
+              <div className="text-4xl font-bold text-gray-900">{user.thankYouPoints || 0}</div>
               <div className="text-sm text-gray-600 mt-1">今月獲得ポイント</div>
             </div>
           </div>
