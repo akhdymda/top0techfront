@@ -92,6 +92,11 @@ export default function Search() {
   
   const handleSearch = () => {
     const searchQuery = query.trim() || 'all';
+    console.log('検索を実行:', {
+      query: searchQuery,
+      encodedQuery: encodeURIComponent(searchQuery),
+      url: `/search/results?q=${encodeURIComponent(searchQuery)}`
+    });
     router.push(`/search/results?q=${encodeURIComponent(searchQuery)}`);
   };
 
@@ -194,7 +199,7 @@ export default function Search() {
           </div>
           <div className="mt-8 flex flex-col items-center gap-8 md:gap-12">
             <button
-              onClick={() => router.push('/search/results')}
+              onClick={handleSearch}
               className="px-28 py-3 bg-white text-black rounded-full hover:bg-gray-200 transition-colors font-sans-jp text-lg tracking-widest flex items-center gap-2"
             >
               <Cloud className="w-5 h-5 md:w-7 md:h-7" />
