@@ -71,23 +71,24 @@ export default function SearchUserCard({ user }) {
 
   return (
     <div
-      className="bg-white rounded-lg p-4 shadow-sm cursor-pointer transition-transform hover:scale-105"
+      className="bg-white rounded-lg p-4 shadow-sm cursor-pointer transition-transform hover:scale-105 h-[450px] flex flex-col"
       onClick={() => handleUserClick(user.id)}
     >
+      {/* ヘッダー部分 */}
       <div className="flex justify-between items-start mb-4">
         <div className="flex gap-4">
-          <Image
-            src={user.image || '/default-avatar.png'}
-            alt={displayName}
-            width={60}
-            height={60}
-            className="rounded"
-          />
-          <div>
-            <h3 className="font-bold text-lg text-gray-900">{displayName}</h3>
-            <p className="text-sm text-gray-600">{user.department}</p>
+          <div className="relative w-[60px] h-[60px] flex-shrink-0">
+            <Image
+              src={user.imageUrl || "/default-avatar.png"}
+              alt={displayName}
+              fill
+              className="rounded object-cover"
+            />
+          </div>
+          <div className="flex-1 min-w-0">
+            <h3 className="font-bold text-lg text-gray-900 truncate">{displayName}</h3>
+            <p className="text-sm text-gray-600 truncate">{user.department}</p>
             <p className="text-sm text-gray-600">社歴：{user.yearsOfService || '-'}年目</p>
-            <p className="text-sm text-gray-600">専業：{user.specialty || '-'}</p>
             <p className="text-sm text-gray-600">入社形態：{user.joinForm || '未設定'}</p>
           </div>
         </div>
@@ -105,33 +106,23 @@ export default function SearchUserCard({ user }) {
         </button>
       </div>
 
-      {/* ✅ 重複除外済みスキル表示 */}
-      <div className="flex flex-wrap gap-2 mb-4 rounded-lg bg-gray-100 p-2">
-        {[...new Set(user.skills?.map(skill => skill.name))].map((skillName, index) => (
-          <SkillTag key={index} text={skillName} />
-        ))}
+      {/* スキル表示部分 */}
+      <div className="flex-1 mt-2">
+        <div className="flex flex-wrap gap-2 rounded-lg bg-gray-100 p-2 h-[200px] overflow-y-auto">
+          {[...new Set(user.skills?.map(skill => skill.name))].map((skillName, index) => (
+            <SkillTag key={index} text={skillName} size="small" />
+          ))}
+        </div>
       </div>
 
-      <div className="flex flex-col flex-grow">
-        <div className="flex items-center justify-between mb-2">
-          <div>
-            <h3 className="text-lg font-semibold text-gray-900">{user.name}</h3>
-            <p className="text-sm text-gray-600">{user.department}</p>
-          </div>
-        </div>
-
-        <div className="text-sm text-gray-600 mb-2">
+      {/* ステータス部分 */}
+      <div className="mt-2">
+        <button className="w-full py-2 text-center bg-[#F87171] text-white rounded hover:bg-[#EF4444] transition-colors">
           {user.welcome_level || '相談歓迎しています！'}
-        </div>
-
-        <div className="flex flex-wrap gap-1 mb-4">
-          <button className="w-full py-2 text-center bg-[#F87171] text-white rounded hover:bg-[#EF4444] transition-colors">
-            {user.welcome_level || '相談歓迎しています！'}
-          </button>
-        </div>
+        </button>
 
         {user.similarity_score && (
-          <div className="mt-4 flex justify-between items-center text-sm text-gray-500">
+          <div className="mt-2 flex justify-between items-center text-sm text-gray-500">
             <span>マッチ度</span>
             <span className="flex items-center">
               <span className="ml-1 text-[#F87171] font-bold">
@@ -140,15 +131,17 @@ export default function SearchUserCard({ user }) {
             </span>
           </div>
         )}
+      </div>
 
-        <div className="mt-6">
-          <Link
-            href={`/user/${user.id}`}
-            className="text-blue-600 hover:text-blue-800 font-medium"
-          >
-            詳細を見る →
-          </Link>
-        </div>
+      {/* フッター部分 */}
+      <div className="mt-4 pt-2 border-t border-gray-200">
+        <Link
+          href={`/user/${user.id}`}
+          className="text-blue-600 hover:text-blue-800 font-medium inline-block"
+          onClick={(e) => e.stopPropagation()}
+        >
+          詳細を見る →
+        </Link>
       </div>
     </div>
   );
