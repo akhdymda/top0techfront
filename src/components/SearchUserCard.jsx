@@ -112,28 +112,43 @@ export default function SearchUserCard({ user }) {
         ))}
       </div>
 
-      <button className="w-full py-2 text-center bg-[#F87171] text-white rounded hover:bg-[#EF4444] transition-colors">
-        相談依頼、みんなで聞いてください！
-      </button>
-
-      {user.similarity_score && (
-        <div className="mt-4 flex justify-between items-center text-sm text-gray-500">
-          <span>マッチ度</span>
-          <span className="flex items-center">
-            <span className="ml-1 text-[#F87171] font-bold">
-              {Math.round(user.similarity_score * 100)}%
-            </span>
-          </span>
+      <div className="flex flex-col flex-grow">
+        <div className="flex items-center justify-between mb-2">
+          <div>
+            <h3 className="text-lg font-semibold text-gray-900">{user.name}</h3>
+            <p className="text-sm text-gray-600">{user.department}</p>
+          </div>
         </div>
-      )}
 
-      <div className="mt-6">
-        <Link
-          href={`/user/${user.id}`}
-          className="text-blue-600 hover:text-blue-800 font-medium"
-        >
-          詳細を見る →
-        </Link>
+        <div className="text-sm text-gray-600 mb-2">
+          {user.welcome_level || '相談歓迎しています！'}
+        </div>
+
+        <div className="flex flex-wrap gap-1 mb-4">
+          <button className="w-full py-2 text-center bg-[#F87171] text-white rounded hover:bg-[#EF4444] transition-colors">
+            {user.welcome_level || '相談歓迎しています！'}
+          </button>
+        </div>
+
+        {user.similarity_score && (
+          <div className="mt-4 flex justify-between items-center text-sm text-gray-500">
+            <span>マッチ度</span>
+            <span className="flex items-center">
+              <span className="ml-1 text-[#F87171] font-bold">
+                {Math.round(user.similarity_score * 100)}%
+              </span>
+            </span>
+          </div>
+        )}
+
+        <div className="mt-6">
+          <Link
+            href={`/user/${user.id}`}
+            className="text-blue-600 hover:text-blue-800 font-medium"
+          >
+            詳細を見る →
+          </Link>
+        </div>
       </div>
     </div>
   );

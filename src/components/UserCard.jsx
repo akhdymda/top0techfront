@@ -100,7 +100,7 @@ export default function UserCard({ user, currentUserId }) {
       <button
         className="w-full py-2 text-center bg-[#F87171] text-white rounded hover:bg-[#EF4444] transition-colors"
       >
-        相談依頼、みんなで聞いてください！
+        {user.welcome_level || '相談歓迎しています！'}
       </button>
 
       {/* スコア情報の表示（両方） */}
