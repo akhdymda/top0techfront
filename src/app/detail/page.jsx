@@ -1,11 +1,14 @@
 'use client';
 
-import React from 'react';
-import { Calendar, Clock, Coffee, Mail, MessageCircle } from 'lucide-react';
+import React, { useState } from 'react';
+import { Calendar, Clock, Coffee, Mail, MessageCircle, Bookmark } from 'lucide-react';
 import Header from '../../components/Header';
 import Footer from '../../components/Footer';
 
 export default function MyPage() {
+  const [isFavorite, setIsFavorite] = useState(false);
+  const [thankPoints, setThankPoints] = useState(0);
+
   const handleTeamsClick = () => {
     // Teams deep link integration
     window.open('msteams://', '_blank');
@@ -14,6 +17,14 @@ export default function MyPage() {
   const handleEmailClick = () => {
     // Email client integration
     window.open('mailto:misaki.sato@company.com', '_blank');
+  };
+
+  const handleFavoriteClick = () => {
+    setIsFavorite(!isFavorite);
+  };
+
+  const handleThankClick = () => {
+    setThankPoints(prev => prev + 1);
   };
 
   return (
@@ -30,8 +41,16 @@ export default function MyPage() {
                 className="w-32 h-32 rounded-full object-cover border-4 border-white shadow-sm"
               />
               <div className="flex-1">
-                <div className="flex items-center gap-4 mb-2">
+                <div className="flex items-center justify-between mb-2">
                   <h1 className="text-2xl font-semibold text-[#6b635d]">佐藤 美咲</h1>
+                  <button
+                    onClick={handleFavoriteClick}
+                    className={`p-2 rounded-full transition-colors ${
+                      isFavorite ? 'text-[#6b635d]' : 'text-[#6b635d]/50 hover:text-[#6b635d]'
+                    }`}
+                  >
+                    <Bookmark className="w-6 h-6" fill={isFavorite ? 'currentColor' : 'none'} />
+                  </button>
                 </div>
                 <p className="text-[#6b635d]/80 mb-2">マーケティング部 / プロジェクトマネージャー</p>
                 <div className="flex gap-3 mb-4">
@@ -127,29 +146,30 @@ export default function MyPage() {
                 </div>
               </div>
 
-              {/* Recent Activities */}
-              <div className="bg-white/80 backdrop-blur rounded-2xl shadow-sm border border-[#6b635d]/20 p-6">
-                <h2 className="text-xl font-semibold mb-4 text-[#6b635d]">最近の活動</h2>
-                <ul className="space-y-4">
-                  <li className="flex gap-2 text-[#6b635d]/80 text-sm">
-                    <Clock size={16} />
-                    <span>先週、新規プロジェクトのキックオフを実施</span>
-                  </li>
-                  <li className="flex gap-2 text-[#6b635d]/80 text-sm">
-                    <Clock size={16} />
-                    <span>先月、チームビルディングワークショップを主催</span>
-                  </li>
-                </ul>
+              {/* Thank Points Section */}
+              <div className="bg-white/80 backdrop-blur rounded-2xl shadow-sm border border-[#e6dfd4] p-6">
+                <h2 className="text-xl font-semibold mb-4 text-[#4a4541]">サンクスポイント</h2>
+                <div className="bg-[#faf7f2] rounded-lg p-6 border border-[#e6dfd4]">
+                  <div className="flex items-end gap-2 mb-2 ml-auto w-fit">
+                    <div className="text-6xl font-bold text-[#4a4541]">{thankPoints}</div>
+                    <div className="bg-[#FF6058] rounded-full w-12 h-12 flex items-center justify-center mb-1 shadow-md shadow-gray-600/50">
+                      <span className="text-white text-xs font-bold text-center">
+                        Thank<br />You
+                      </span>
+                    </div>
+                  </div>
+                  <div className="text-sm text-[#6b635d]">今月獲得ポイント</div>
+                </div>
               </div>
             </div>
           </div>
 
           {/* Free Comments Section */}
           <div className="bg-white/80 backdrop-blur rounded-2xl shadow-sm border border-[#6b635d]/20 p-6">
-            <h2 className="text-xl font-semibold mb-4 text-[#6b635d]">フリーコメント</h2>
+            <h2 className="text-xl font-semibold mb-4 text-[#6b635d]">CHOTTOひとこと</h2>
             <div className="space-y-4">
-              <p className="text-[#6b635d]/60 text-center py-4">
-                まだコメントはありません
+              <p className="text-[#6b635d]/80 text-left py-4">
+              新しいことに挑戦するのが好きです。私自身も色んな方と一緒に経験を積んでいきたいので、声かけて頂くのは大歓迎です！休日は、走ってます。マラソン仲間も募集中！
               </p>
             </div>
           </div>

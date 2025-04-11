@@ -318,7 +318,7 @@ export default function MyPage() {
                 <h2 className="text-xl font-semibold mb-4 text-[#4a4541]">サンクスポイント</h2>
                 <div className="bg-[#faf7f2] rounded-lg p-6 border border-[#e6dfd4]">
                   <div className="flex items-end gap-2 mb-2 ml-auto w-fit">
-                    <div className="text-6xl font-bold text-[#4a4541]">0</div>
+                    <div className="text-6xl font-bold text-[#4a4541]">50</div>
                     <div className="bg-[#FF6058] rounded-full w-12 h-12 flex items-center justify-center mb-1 shadow-md shadow-gray-600/50">
                       <span className="text-white text-xs font-bold text-center">
                         Thank<br />You
@@ -333,10 +333,10 @@ export default function MyPage() {
 
           {/* Free Comments Section */}
           <div className="bg-white/80 backdrop-blur rounded-2xl shadow-sm border border-[#6b635d]/20 p-6">
-            <h2 className="text-xl font-semibold mb-4 text-[#6b635d]">フリーコメント</h2>
+            <h2 className="text-xl font-semibold mb-4 text-[#6b635d]">CHOTTOひとこと</h2>
             <div className="space-y-4">
-              <p className="text-[#6b635d]/60 text-center py-4">
-                まだコメントはありません
+              <p className="text-[#6b635d]/60 text-left py-4">
+                新しいことに挑戦するのが好きです。私自身も色んな方と一緒に経験を積んでいきたいので、声かけて頂くのは大歓迎です！休日は、走ってます。マラソン仲間も募集中！
               </p>
             </div>
           </div>

@@ -140,7 +140,7 @@ export default function Search() {
                   {'CHOTTO'.split('').map((letter, index) => (
                     <span
                       key={index}
-                      className={`text-4xl md:text-8xl font-semibold font-sans animate-drop-in delay-${index*100} opacity-0`}
+                      className={`text-4xl md:text-8xl font-semibold font-sans animate-drop-in delay-${index*100} opacity-0 text-[#F5F5DC]`}
                       style={{ animationDelay: `${index * 0.2}s` }}
                     >
                       {letter}
