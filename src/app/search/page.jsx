@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import Image from 'next/image';
 import { ArrowDown, ArrowUpRight, Search as SearchIcon, Sparkles, Cloud } from 'lucide-react';
 import Header from '../../components/Header';
 import Footer from '../../components/Footer';
@@ -205,22 +206,22 @@ export default function Search() {
               <Cloud className="w-5 h-5 md:w-7 md:h-7" />
               ふわっと探す
             </button>
-            <div className="flex flex-col md:flex-row gap-4 md:gap-12 w-full md:w-auto">
+            <div className="flex flex-col md:flex-row gap-4 md:gap-12 w-full md:w-auto justify-center items-center">
               <a
                 href="/search/skill"
-                className="w-80 px-8 py-3 bg-[#A5C05B] text-white rounded-full hover:opacity-90 transition-opacity font-sans-jp text-center whitespace-nowrap"
+                className="w-full md:w-80 px-8 py-3 bg-[#A5C05B] text-white rounded-full hover:opacity-90 transition-opacity font-sans-jp text-center whitespace-nowrap"
               >
                 スキルから探す人はこちら
               </a>
               <a
                 href="search/department"
-                className="w-80 px-8 py-3 bg-[#7BA4A8] text-white rounded-full hover:opacity-90 transition-opacity font-sans-jp text-center whitespace-nowrap"
+                className="w-full md:w-80 px-8 py-3 bg-[#7BA4A8] text-white rounded-full hover:opacity-90 transition-opacity font-sans-jp text-center whitespace-nowrap"
               >
                 部署から探す人はこちら
               </a>
               <a
                 href="/books"
-                className="w-80 px-8 py-3 bg-[#D09683] text-white rounded-full hover:opacity-90 transition-opacity font-sans-jp text-center whitespace-nowrap"
+                className="w-full md:w-80 px-8 py-3 bg-[#D09683] text-white rounded-full hover:opacity-90 transition-opacity font-sans-jp text-center whitespace-nowrap"
               >
                 読書仲間から探す人はこちら
               </a>
@@ -268,14 +269,20 @@ export default function Search() {
             </div>
             <div className="relative h-[300px] md:h-[600px] overflow-hidden rounded-2xl">
               {sections.map((section, index) => (
-                <img
+                <div
                   key={section.title}
-                  src={section.image}
-                  alt={section.title}
-                  className={`absolute inset-0 w-full h-full object-cover transition-all duration-700 ${
+                  className={`absolute inset-0 w-full h-full transition-all duration-700 ${
                     activeSection === index ? 'opacity-100' : 'opacity-0'
                   }`}
-                />
+                >
+                  <Image
+                    src={section.image}
+                    alt={section.title}
+                    fill
+                    className="object-cover"
+                    priority={index === 0}
+                  />
+                </div>
               ))}
             </div>
           </div>
