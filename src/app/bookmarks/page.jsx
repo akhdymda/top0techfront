@@ -13,6 +13,8 @@ export default function BookmarksPage() {
   useEffect(() => {
     if (user?.id) {
       fetchBookmarks();
+    } else {
+      setLoading(false);
     }
   }, [user?.id]);
 
@@ -26,7 +28,20 @@ export default function BookmarksPage() {
         throw new Error('ブックマークの取得に失敗しました');
       }
       const data = await response.json();
-      setBookmarks(data.bookmarks);
+      
+      // ブックマークされたユーザーの詳細情報を取得
+      const userDetailsPromises = data.bookmarks.map(async (bookmark) => {
+        const userResponse = await fetch(
+          `${process.env.NEXT_PUBLIC_API_ENDPOINT}/users/${bookmark.user_id}`
+        );
+        if (!userResponse.ok) {
+          throw new Error(`ユーザー情報の取得に失敗しました: ${bookmark.user_id}`);
+        }
+        return userResponse.json();
+      });
+
+      const userDetails = await Promise.all(userDetailsPromises);
+      setBookmarks(userDetails);
     } catch (error) {
       console.error('ブックマークの取得中にエラーが発生しました:', error);
       setError(error.message);
@@ -57,10 +72,8 @@ export default function BookmarksPage() {
       <div className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">
           <div className="text-center">
-            <h2 className="text-3xl font-bold text-gray-900">
-              ブックマーク一覧
-            </h2>
-            <p className="mt-4 text-lg text-gray-600">読み込み中...</p>
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-900 mx-auto"></div>
+            <p className="mt-4 text-gray-600">読み込み中...</p>
           </div>
         </div>
       </div>
@@ -75,13 +88,7 @@ export default function BookmarksPage() {
             <h2 className="text-3xl font-bold text-gray-900">
               ブックマーク一覧
             </h2>
-            <p className="mt-4 text-lg text-red-600">{error}</p>
-            <button
-              onClick={fetchBookmarks}
-              className="mt-4 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
-            >
-              再読み込み
-            </button>
+            <p className="mt-4 text-lg text-red-500">{error}</p>
           </div>
         </div>
       </div>
@@ -91,18 +98,15 @@ export default function BookmarksPage() {
   return (
     <div className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto">
-        <div className="text-center mb-12">
+        <div className="text-center mb-8">
           <h2 className="text-3xl font-bold text-gray-900">
             ブックマーク一覧
           </h2>
-          <p className="mt-4 text-lg text-gray-600">
-            気になるユーザーをチェックしましょう
-          </p>
         </div>
 
         {bookmarks.length === 0 ? (
           <div className="text-center">
-            <p className="text-gray-600">ブックマークはまだありません</p>
+            <p className="text-gray-600">ブックマークはありません</p>
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -111,6 +115,7 @@ export default function BookmarksPage() {
                 key={bookmark.id}
                 user={bookmark}
                 currentUserId={user.id}
+                isInitiallyBookmarked={true}
               />
             ))}
           </div>

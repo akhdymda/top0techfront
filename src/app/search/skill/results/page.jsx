@@ -19,8 +19,28 @@ function SkillSearchResultsContent() {
     const fetchUsers = async () => {
       try {
         const response = await fetch(`${process.env.NEXT_PUBLIC_API_ENDPOINT}/skills/${encodeURIComponent(skillName)}`);
+        if (!response.ok) {
+          throw new Error('ユーザーデータの取得に失敗しました');
+        }
         const data = await response.json();
-        setUsers(data.users || []);
+        console.log('Initial API response:', data);
+        
+        // ユーザー詳細情報を取得
+        const userDetailsPromises = data.users.map(async (user) => {
+          const userResponse = await fetch(
+            `${process.env.NEXT_PUBLIC_API_ENDPOINT}/users/${user.id}`
+          );
+          if (!userResponse.ok) {
+            throw new Error(`ユーザー情報の取得に失敗しました: ${user.id}`);
+          }
+          const userDetail = await userResponse.json();
+          console.log('User detail response:', userDetail);
+          return userDetail;
+        });
+
+        const userDetails = await Promise.all(userDetailsPromises);
+        console.log('Final user details:', userDetails);
+        setUsers(userDetails);
       } catch (error) {
         console.error('ユーザーデータの取得に失敗しました:', error);
       } finally {

@@ -22,6 +22,8 @@ export default function UserCard({ user, currentUserId, isInitiallyBookmarked = 
   }, [effectiveUserId, user.id, isInitiallyBookmarked]);
 
   const checkBookmarkStatus = async () => {
+    if (!effectiveUserId) return;
+    
     try {
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_API_ENDPOINT}/bookmarks/${effectiveUserId}/${user.id}/status`
@@ -36,7 +38,7 @@ export default function UserCard({ user, currentUserId, isInitiallyBookmarked = 
   const toggleBookmark = async (e) => {
     e.stopPropagation();
     if (!effectiveUserId) {
-      setIsBookmarked(!isBookmarked);
+      alert('ブックマークするにはログインが必要です');
       return;
     }
 
@@ -64,6 +66,9 @@ export default function UserCard({ user, currentUserId, isInitiallyBookmarked = 
     router.push(`/user/${user.id}`);
   };
 
+  // スキルデータの構造をログ出力
+  console.log('User skills data:', user.skills);
+
   return (
     <div
       className="bg-white/80 backdrop-blur rounded-2xl p-4 shadow-sm cursor-pointer transition-transform hover:scale-105 h-[450px] flex flex-col"
@@ -82,7 +87,7 @@ export default function UserCard({ user, currentUserId, isInitiallyBookmarked = 
           </div>
           <div className="flex-1 min-w-0">
             <h3 className="font-bold text-lg text-[#6b635d] truncate">{displayName}</h3>
-            <p className="text-xs text-[#6b635d]/80 truncate break-all">{user.department}</p>
+            <p className="text-xs text-[#6b635d]/80 truncate break-all">{user.department?.name || '部署未設定'}</p>
             <p className="text-xs text-[#6b635d]/80">社歴：{user.yearsOfService || '-'}年目</p>
             <p className="text-xs text-[#6b635d]/80">入社形態：{user.joinForm || '未設定'}</p>
           </div>
@@ -103,8 +108,11 @@ export default function UserCard({ user, currentUserId, isInitiallyBookmarked = 
       {/* スキル表示部分 */}
       <div className="flex-1 mt-2">
         <div className="flex flex-wrap gap-2 rounded-lg bg-[#6b635d]/10 p-2 h-[200px] overflow-y-auto">
-          {user.skills && user.skills.map((skill, index) => (
-            <SkillTag key={index} text={typeof skill === 'string' ? skill : skill.name} size="small" />
+          {Array.isArray(user.skills) && user.skills.map((skill, index) => (
+            <SkillTag 
+              key={index}
+              text={typeof skill === 'object' ? skill.name : skill}
+            />
           ))}
         </div>
       </div>
@@ -112,7 +120,7 @@ export default function UserCard({ user, currentUserId, isInitiallyBookmarked = 
       {/* ステータス部分 */}
       <div className="mt-2 space-y-2">
         <button className="w-full py-2 text-center bg-[#6b635d] text-white rounded-lg hover:bg-[#6b635d]/80 transition-colors">
-          {user.welcome_level || '相談歓迎しています！'}
+          {user.welcomeLevel || '相談歓迎しています！'}
         </button>
 
         <div className="flex flex-col gap-1 text-sm text-[#6b635d]/80">
