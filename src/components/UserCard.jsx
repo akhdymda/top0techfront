@@ -1,3 +1,5 @@
+'use client';
+
 import Image from 'next/image';
 import SkillTag from './Tag';
 import { useRouter } from 'next/navigation';
@@ -6,18 +8,18 @@ import Link from 'next/link';
 import { StarIcon } from '@heroicons/react/24/solid';
 import { useAuth } from '../contexts/AuthContext';
 
-export default function UserCard({ user, currentUserId }) {
+export default function UserCard({ user, currentUserId, isInitiallyBookmarked = false }) {
   const router = useRouter();
-  const [isBookmarked, setIsBookmarked] = useState(false);
+  const [isBookmarked, setIsBookmarked] = useState(isInitiallyBookmarked);
   const [isLoading, setIsLoading] = useState(false);
   const { user: authUser } = useAuth();
   const effectiveUserId = currentUserId || authUser?.id;
 
   useEffect(() => {
-    if (effectiveUserId && user.id) {
+    if (effectiveUserId && user.id && !isInitiallyBookmarked) {
       checkBookmarkStatus();
     }
-  }, [effectiveUserId, user.id]);
+  }, [effectiveUserId, user.id, isInitiallyBookmarked]);
 
   const checkBookmarkStatus = async () => {
     try {
@@ -34,7 +36,7 @@ export default function UserCard({ user, currentUserId }) {
   const toggleBookmark = async (e) => {
     e.stopPropagation();
     if (!effectiveUserId) {
-      alert('ブックマークするにはログインが必要です');
+      setIsBookmarked(!isBookmarked);
       return;
     }
 
@@ -52,6 +54,12 @@ export default function UserCard({ user, currentUserId }) {
 
   const displayName = user.name || '名前未設定';
 
+  // 画像のBase64形式をsrcに変換
+  const imageSrc =
+    user.image_data && user.image_data_type
+      ? `data:${user.image_data_type};base64,${user.image_data}`
+      : '/default-avatar.png';
+
   const handleCardClick = () => {
     router.push(`/user/${user.id}`);
   };
@@ -66,7 +74,7 @@ export default function UserCard({ user, currentUserId }) {
         <div className="flex gap-2 flex-1 min-w-0">
           <div className="relative w-[60px] h-[60px] flex-shrink-0">
             <Image
-              src={user.imageUrl || "/default-avatar.png"}
+              src={imageSrc}
               alt={displayName}
               fill
               className="rounded object-cover"
@@ -83,7 +91,7 @@ export default function UserCard({ user, currentUserId }) {
             disabled={isLoading}
             className={`flex-shrink-0 ${
               isBookmarked
-                ? 'text-[#6b635d] hover:text-[#6b635d]/80'
+                ? 'text-yellow-400 hover:text-yellow-500'
                 : 'text-[#6b635d]/40 hover:text-[#6b635d]/60'
             }`}
           >

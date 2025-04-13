@@ -1,8 +1,9 @@
+'use client';
+
 import Image from 'next/image';
-import SkillTag from './Tag';
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import React, { useState, useEffect } from 'react';
-import Link from 'next/link';
 import { StarIcon } from '@heroicons/react/24/solid';
 import { useAuth } from '../contexts/AuthContext';
 
@@ -12,16 +13,20 @@ export default function SearchUserCard({ user }) {
   const [isLoading, setIsLoading] = useState(false);
   const { user: currentUser } = useAuth();
 
+  if (!user) {
+    return null;
+  }
+
   useEffect(() => {
-    if (currentUser?.id && user.id) {
+    if (currentUser?.id && user.user_id) {
       checkBookmarkStatus();
     }
-  }, [currentUser?.id, user.id]);
+  }, [currentUser?.id, user.user_id]);
 
   const checkBookmarkStatus = async () => {
     try {
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_ENDPOINT}/bookmarks/${currentUser.id}/${user.id}/status`
+        `${process.env.NEXT_PUBLIC_API_ENDPOINT}/bookmarks/${currentUser.id}/${user.user_id}/status`
       );
       const data = await response.json();
       setIsBookmarked(data.is_bookmarked);
@@ -33,29 +38,15 @@ export default function SearchUserCard({ user }) {
   const toggleBookmark = async (e) => {
     e.stopPropagation();
     if (!currentUser?.id) {
-      alert('ブックマークするにはログインが必要です');
+      setIsBookmarked(!isBookmarked);
       return;
     }
 
     setIsLoading(true);
     try {
-      if (isBookmarked) {
-        await fetch(
-          `${process.env.NEXT_PUBLIC_API_ENDPOINT}/bookmarks/${currentUser.id}/${user.id}`,
-          {
-            method: 'DELETE',
-          }
-        );
-        setIsBookmarked(false);
-      } else {
-        await fetch(
-          `${process.env.NEXT_PUBLIC_API_ENDPOINT}/bookmarks/${currentUser.id}/${user.id}`,
-          {
-            method: 'POST',
-          }
-        );
-        setIsBookmarked(true);
-      }
+      const url = `${process.env.NEXT_PUBLIC_API_ENDPOINT}/bookmarks/${currentUser.id}/${user.user_id}`;
+      await fetch(url, { method: isBookmarked ? 'DELETE' : 'POST' });
+      setIsBookmarked(!isBookmarked);
     } catch (error) {
       console.error('ブックマークの更新に失敗しました:', error);
     } finally {
@@ -63,81 +54,84 @@ export default function SearchUserCard({ user }) {
     }
   };
 
-  const handleUserClick = (userId) => {
-    router.push(`/user/${userId}`);
+  const displayName = user.user_name || '名前未設定';
+  const imageSrc = user.image_data 
+    ? `data:image/jpeg;base64,${user.image_data}`
+    : '/default-avatar.png';
+
+  const handleCardClick = () => {
+    if (user.user_id) {
+      router.push(`/user/${user.user_id}`);
+    }
   };
 
-  const displayName = user.name || '名前未設定';
-
   return (
-    <div
-      className="bg-white rounded-lg p-4 shadow-sm cursor-pointer transition-transform hover:scale-105 h-[450px] flex flex-col"
-      onClick={() => handleUserClick(user.id)}
-    >
+    <div className="bg-white/80 backdrop-blur rounded-2xl p-4 shadow-sm cursor-pointer transition-transform hover:scale-105">
       {/* ヘッダー部分 */}
-      <div className="flex justify-between items-start mb-4">
-        <div className="flex gap-4">
-          <div className="relative w-[60px] h-[60px] flex-shrink-0">
+      <div className="flex items-start justify-between mb-4">
+        <div className="flex gap-3">
+          <div className="relative w-12 h-12 flex-shrink-0">
             <Image
-              src={user.imageUrl || "/default-avatar.png"}
+              src={imageSrc}
               alt={displayName}
               fill
-              className="rounded object-cover"
+              className="rounded-md object-cover"
             />
           </div>
-          <div className="flex-1 min-w-0">
-            <h3 className="font-bold text-lg text-gray-900 truncate">{displayName}</h3>
-            <p className="text-sm text-gray-600 truncate">{user.department}</p>
-            <p className="text-sm text-gray-600">社歴：{user.yearsOfService || '-'}年目</p>
-            <p className="text-sm text-gray-600">入社形態：{user.joinForm || '未設定'}</p>
+          <div>
+            <h3 className="font-bold text-base text-[#6b635d]">{displayName}</h3>
+            <p className="text-xs text-[#6b635d]/80">{user.department_name || '未所属'}</p>
+            <p className="text-xs text-[#6b635d]/80">社歴：{user.yearsOfService || '-'}年目</p>
+            <p className="text-xs text-[#6b635d]/80">入社形態：{user.joinForm || '未設定'}</p>
           </div>
         </div>
-
         <button
           onClick={toggleBookmark}
           disabled={isLoading}
-          className={`${
+          className={`flex-shrink-0 ${
             isBookmarked
               ? 'text-yellow-400 hover:text-yellow-500'
-              : 'text-gray-400 hover:text-yellow-400'
+              : 'text-[#6b635d]/40 hover:text-[#6b635d]/60'
           }`}
         >
-          <StarIcon className="h-6 w-6" />
+          <StarIcon className="h-5 w-5" />
         </button>
       </div>
 
-      {/* スキル表示部分 */}
-      <div className="flex-1 mt-2">
-        <div className="flex flex-wrap gap-2 rounded-lg bg-gray-100 p-2 h-[200px] overflow-y-auto">
-          {[...new Set(user.skills?.map(skill => skill.name))].map((skillName, index) => (
-            <SkillTag key={index} text={skillName} size="small" />
-          ))}
-        </div>
+      {/* スキルタグ */}
+      <div className="flex flex-wrap gap-2 min-h-[120px] max-h-[160px] overflow-y-auto rounded-lg bg-[#6b635d]/10 p-2">
+        {user.skills?.map((skill, index) => (
+          <span
+            key={index}
+            className="inline-flex items-center px-3 py-1 text-base text-[#6b635d] bg-white rounded-full border border-[#6b635d]/30 whitespace-nowrap"
+          >
+            {typeof skill === 'string' ? skill : skill.name}
+          </span>
+        ))}
       </div>
 
-      {/* ステータス部分 */}
-      <div className="mt-2">
-        <button className="w-full py-2 text-center bg-[#F87171] text-white rounded hover:bg-[#EF4444] transition-colors">
+      {/* ステータス */}
+      <div className="mt-4">
+        <button className="w-full py-2 text-center bg-[#6b635d] text-white rounded-lg hover:bg-[#6b635d]/80 transition-colors">
           {user.welcome_level || '相談歓迎しています！'}
         </button>
-
-        {user.similarity_score && (
-          <div className="mt-2 flex justify-between items-center text-sm text-gray-500">
-            <span>マッチ度</span>
-            <span className="flex items-center">
-              <span className="ml-1 text-[#F87171] font-bold">
-                {Math.round(user.similarity_score * 100)}%
-              </span>
-            </span>
-          </div>
-        )}
       </div>
 
-      {/* フッター部分 */}
-      <div className="mt-4 pt-2 border-t border-gray-200">
+      {/* マッチ度 */}
+      {typeof user.similarity_score === 'number' && (
+        <div className="mt-2 flex justify-between text-sm text-[#6b635d]/80">
+          <span>マッチ度</span>
+          <span className="text-[#6b635d] font-bold">
+            {Math.round(user.similarity_score * 100)}%
+          </span>
+        </div>
+      )}
+
+      {/* フッター */}
+      <div className="mt-4 pt-2 border-t border-[#6b635d]/20">
         <Link
-          href={`/user/${user.id}`}
-          className="text-blue-600 hover:text-blue-800 font-medium inline-block"
+          href={`/user/${user.user_id}`}
+          className="text-[#6b635d] hover:text-[#6b635d]/80 font-medium inline-block"
           onClick={(e) => e.stopPropagation()}
         >
           詳細を見る →

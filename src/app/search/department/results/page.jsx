@@ -16,20 +16,22 @@ export default function DepartmentSearchResultsPage() {
         <Header />
       </div>
 
-      <main className="relative flex-1 bg-[#7BA4A8] h-[250vh] text-white pt-16">
-        <div className="absolute inset-0 bg-gradient-to-b from-black/20 to-black/10 z-10" />
-
+      <main className="relative flex-1 bg-black text-white pt-16">
+        <video
+          autoPlay
+          muted
+          loop
+          playsInline
+          className="absolute inset-0 w-full h-full object-cover opacity-50"
+        >
+          <source src="https://cdn.coverr.co/videos/coverr-typing-on-computer-keyboard-2154/1080p.mp4" type="video/mp4" />
+        </video>
+        <div className="absolute inset-0 bg-gradient-to-b from-black/70 to-black/30 z-10" />
+        
         <div className="relative z-20 min-h-screen bg-black/90 pt-20">
           <Suspense fallback={<p className="text-center pt-20">検索結果を読み込み中...</p>}>
             <DepartmentSearchResultsContent />
           </Suspense>
-
-          <button
-            onClick={() => router.push('/search/department')}
-            className="absolute bottom-8 right-8 bg-white/10 backdrop-blur-sm border-2 border-white/20 rounded-full p-4 hover:bg-white/20 transition-all text-white"
-          >
-            <ArrowLeft size={24} />
-          </button>
         </div>
       </main>
 

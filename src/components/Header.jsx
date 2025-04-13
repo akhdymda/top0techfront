@@ -2,11 +2,9 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { useAuth } from '../contexts/AuthContext';
 import Image from 'next/image';
 
 export default function Header() {
-  const { user, logout } = useAuth();
   const [isSearchOpen, setIsSearchOpen] = useState(false);
 
   return (
@@ -68,7 +66,7 @@ export default function Header() {
             )}
           </div>
 
-          <Link href="/notifications" className="text-gray-500 hover:text-gray-700">
+          <Link href="/favorite" className="text-gray-500 hover:text-gray-700">
             <span>気になる</span>
           </Link>
           <Link 
@@ -82,3 +80,5 @@ export default function Header() {
     </header>
   );
 } 
+
+
