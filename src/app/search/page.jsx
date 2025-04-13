@@ -219,7 +219,7 @@ export default function Search() {
                 部署から探す人はこちら
               </a>
               <a
-                href="/department-search"
+                href="/books"
                 className="w-80 px-8 py-3 bg-[#D09683] text-white rounded-full hover:opacity-90 transition-opacity font-sans-jp text-center whitespace-nowrap"
               >
                 読書仲間から探す人はこちら
