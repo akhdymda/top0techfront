@@ -1,21 +1,20 @@
 'use client';
 
-import Image from 'next/image';
-import SkillTag from './Tag';
+import React from 'react';
+import { BookmarkIcon as BookmarkOutline } from '@heroicons/react/24/outline';
+import { BookmarkIcon as BookmarkFilled } from '@heroicons/react/24/solid';
+import { ArrowRightIcon } from '@heroicons/react/24/solid';
 import { useRouter } from 'next/navigation';
-import React, { useState, useEffect } from 'react';
-import Link from 'next/link';
-import { StarIcon } from '@heroicons/react/24/solid';
 import { useAuth } from '../contexts/AuthContext';
 
 export default function UserCard({ user, currentUserId, isInitiallyBookmarked = false }) {
   const router = useRouter();
-  const [isBookmarked, setIsBookmarked] = useState(isInitiallyBookmarked);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isBookmarked, setIsBookmarked] = React.useState(isInitiallyBookmarked);
+  const [isLoading, setIsLoading] = React.useState(false);
   const { user: authUser } = useAuth();
   const effectiveUserId = currentUserId || authUser?.id;
 
-  useEffect(() => {
+  React.useEffect(() => {
     if (effectiveUserId && user.id && !isInitiallyBookmarked) {
       checkBookmarkStatus();
     }
@@ -52,14 +51,6 @@ export default function UserCard({ user, currentUserId, isInitiallyBookmarked = 
     }
   };
 
-  const displayName = user.name || '名前未設定';
-
-  // 画像のBase64形式をsrcに変換
-  const imageSrc =
-    user.image_data && user.image_data_type
-      ? `data:${user.image_data_type};base64,${user.image_data}`
-      : '/default-avatar.png';
-
   const handleCardClick = () => {
     router.push(`/user/${user.id}`);
   };
@@ -72,88 +63,69 @@ export default function UserCard({ user, currentUserId, isInitiallyBookmarked = 
   console.log('User skills data:', user.skills);
 
   return (
-    <div
-      className="bg-white/80 backdrop-blur rounded-2xl p-4 shadow-sm cursor-pointer transition-transform hover:scale-105 h-[450px] flex flex-col"
-      onClick={handleCardClick}
-    >
-      {/* ヘッダー部分 */}
-      <div className="flex justify-between items-start mb-4">
-        <div className="flex gap-2 flex-1 min-w-0">
-          <div className="relative w-[60px] h-[60px] flex-shrink-0">
-            <Image
-              src={imageSrc}
-              alt={displayName}
-              fill
-              className="rounded object-cover"
+    <div className="flex flex-col h-full">
+      <div className="flex items-start gap-3 sm:gap-4">
+        <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-gray-200 overflow-hidden flex-shrink-0">
+          {user.image_data ? (
+            <img
+              src={`data:${user.image_data_type};base64,${user.image_data}`}
+              alt={user.name}
+              className="w-full h-full object-cover"
             />
-          </div>
-          <div className="flex-1 min-w-0">
-            <h3 className="font-bold text-lg text-[#6b635d] truncate">{displayName}</h3>
-            <p className="text-xs text-[#6b635d]/80 truncate break-all">{user.department?.name || '部署未設定'}</p>
-            <p className="text-xs text-[#6b635d]/80">社歴：{user.yearsOfService || '-'}年目</p>
-            <p className="text-xs text-[#6b635d]/80">入社形態：{user.joinForm || '未設定'}</p>
-          </div>
-          <button
-            onClick={toggleBookmark}
-            disabled={isLoading}
-            className={`flex-shrink-0 ${
-              isBookmarked
-                ? 'text-yellow-400 hover:text-yellow-500'
-                : 'text-[#6b635d]/40 hover:text-[#6b635d]/60'
-            }`}
-          >
-            <StarIcon className="h-5 w-5" />
-          </button>
+          ) : (
+            <div className="w-full h-full flex items-center justify-center bg-gray-300 text-gray-600 text-sm sm:text-base">
+              {user.name.charAt(0)}
+            </div>
+          )}
         </div>
+        <div className="flex-1 min-w-0">
+          <h3 className="text-base sm:text-lg font-medium text-white truncate">{user.name}</h3>
+          <p className="text-xs sm:text-sm text-gray-400 truncate">{user.department?.name || '部署未設定'}</p>
+          <div className="text-xs sm:text-sm text-gray-400 flex flex-wrap gap-1 sm:gap-2">
+            <span>社歴：{user.yearsOfService}年目</span>
+            <span className="hidden sm:inline">|</span>
+            <span>{user.joinForm}</span>
+          </div>
+        </div>
+        <button
+          onClick={toggleBookmark}
+          disabled={isLoading}
+          className="text-gray-400 hover:text-white transition-colors p-1 sm:p-2"
+        >
+          {isBookmarked ? (
+            <BookmarkFilled className="w-4 h-4 sm:w-5 sm:h-5" />
+          ) : (
+            <BookmarkOutline className="w-4 h-4 sm:w-5 sm:h-5" />
+          )}
+        </button>
       </div>
 
-      {/* スキル表示部分 */}
-      <div className="flex-1 mt-2">
-        <div className="flex flex-wrap gap-2 rounded-lg bg-[#6b635d]/10 p-2 h-[200px] overflow-y-auto">
-          {Array.isArray(user.skills) && user.skills.map((skill, index) => (
-            <SkillTag 
+      <div className="space-y-3 sm:space-y-4 flex-1 mt-3 sm:mt-4">
+        <div className="flex flex-wrap gap-1.5 sm:gap-2">
+          {user.skills?.map((skill, index) => (
+            <span
               key={index}
-              text={typeof skill === 'object' ? skill.name : skill}
-            />
+              className="px-2 sm:px-3 py-1 rounded-full bg-white/10 text-xs sm:text-sm text-white"
+            >
+              {skill.name}
+            </span>
           ))}
         </div>
-      </div>
 
-      {/* ステータス部分 */}
-      <div className="mt-2 space-y-2">
-        <button className="w-full py-2 text-center bg-[#6b635d] text-white rounded-lg hover:bg-[#6b635d]/80 transition-colors">
-          {user.welcome_level || '相談歓迎しています！'}
-        </button>
-
-        <div className="flex flex-col gap-1 text-sm text-[#6b635d]/80">
-          {user.similarity_score !== undefined && (
-            <div className="flex justify-between">
-              <span>マッチ度</span>
-              <span className="text-[#6b635d] font-bold">
-                {Math.round(user.similarity_score * 100)}%
-              </span>
-            </div>
-          )}
-          {user.totalPoints !== undefined && (
-            <div className="flex justify-between">
-              <span>獲得サンクスポイント</span>
-              <span className="text-[#6b635d] font-bold">
-                {user.totalPoints}
-              </span>
-            </div>
-          )}
+        <div className="bg-gray-700/50 rounded-lg p-2 sm:p-3">
+          <p className="text-xs sm:text-sm text-white">{user.welcome_level}</p>
         </div>
       </div>
 
-      {/* フッター部分 */}
-      <div className="mt-4 pt-2 border-t border-[#6b635d]/20">
-        <Link
+      <div className="mt-3 sm:mt-4">
+        <a
           href={`/user/${user.id}`}
-          className="text-[#6b635d] hover:text-[#6b635d]/80 font-medium inline-block"
+          className="text-xs sm:text-sm text-gray-400 hover:text-white transition-colors flex items-center"
           onClick={(e) => e.stopPropagation()}
         >
-          詳細を見る →
-        </Link>
+          詳細を見る
+          <ArrowRightIcon className="w-3 h-3 sm:w-4 sm:h-4 ml-1" />
+        </a>
       </div>
     </div>
   );
