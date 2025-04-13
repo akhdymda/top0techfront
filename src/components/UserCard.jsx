@@ -37,15 +37,13 @@ export default function UserCard({ user, currentUserId, isInitiallyBookmarked = 
 
   const toggleBookmark = async (e) => {
     e.stopPropagation();
-    if (!effectiveUserId) {
-      alert('ブックマークするにはログインが必要です');
-      return;
-    }
-
+    
     setIsLoading(true);
     try {
-      const url = `${process.env.NEXT_PUBLIC_API_ENDPOINT}/bookmarks/${effectiveUserId}/${user.id}`;
-      await fetch(url, { method: isBookmarked ? 'DELETE' : 'POST' });
+      if (effectiveUserId) {
+        const url = `${process.env.NEXT_PUBLIC_API_ENDPOINT}/bookmarks/${effectiveUserId}/${user.id}`;
+        await fetch(url, { method: isBookmarked ? 'DELETE' : 'POST' });
+      }
       setIsBookmarked(!isBookmarked);
     } catch (error) {
       console.error('ブックマークの更新に失敗しました:', error);
@@ -65,6 +63,10 @@ export default function UserCard({ user, currentUserId, isInitiallyBookmarked = 
   const handleCardClick = () => {
     router.push(`/user/${user.id}`);
   };
+
+  // デバッグ用のログ出力
+  console.log('User data:', user);
+  console.log('Welcome level:', user.welcome_level);
 
   // スキルデータの構造をログ出力
   console.log('User skills data:', user.skills);
@@ -120,7 +122,7 @@ export default function UserCard({ user, currentUserId, isInitiallyBookmarked = 
       {/* ステータス部分 */}
       <div className="mt-2 space-y-2">
         <button className="w-full py-2 text-center bg-[#6b635d] text-white rounded-lg hover:bg-[#6b635d]/80 transition-colors">
-          {user.welcomeLevel || '相談歓迎しています！'}
+          {user.welcome_level || '相談歓迎しています！'}
         </button>
 
         <div className="flex flex-col gap-1 text-sm text-[#6b635d]/80">

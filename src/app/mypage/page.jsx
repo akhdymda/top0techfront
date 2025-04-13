@@ -55,17 +55,21 @@ export default function MyPage() {
       try {
         const response = await fetch(`${process.env.NEXT_PUBLIC_API_ENDPOINT}/users/1`);
         const data = await response.json();
+        console.log('Fetched user data:', data); // デバッグ用ログ
         setUserData(data);
         
         // Update formData with user data where available
         setFormData(prev => ({
           ...prev,
-          lastName: data.user_name?.split(' ')[0] || '',
-          firstName: data.user_name?.split(' ')[1] || '',
-          department: data.department_name || '',
-          skills: data.skills?.map(skill => typeof skill === 'string' ? skill : skill.name) || [],
-          yearsOfService: data.years_of_service || prev.yearsOfService,
-          employmentType: data.join_form || prev.employmentType,
+          lastName: data.name?.split(' ')[0] || '',
+          firstName: data.name?.split(' ')[1] || '',
+          department: data.department?.name || '',
+          position: data.position || prev.position,
+          skills: data.skills || [],
+          yearsOfService: data.yearsOfService || prev.yearsOfService,
+          employmentType: data.joinForm || prev.employmentType,
+          welcomeMessage: data.welcome_level || prev.welcomeMessage,
+          message: data.message || prev.message,
         }));
       } catch (error) {
         console.error('ユーザー情報の取得に失敗しました:', error);
@@ -198,14 +202,23 @@ export default function MyPage() {
       <main className="flex-1 bg-[#f5f1eb] text-[#6b635d] pt-16">
         <div className="max-w-4xl mx-auto p-6 space-y-6">
           <div className="flex justify-between items-center">
-            <h1 className="text-2xl font-semibold text-[#4a4541]">マイページ</h1>
-            <button
-              onClick={handleEditClick}
-              className="flex items-center gap-2 bg-[#6b635d] text-white px-4 py-2 rounded-lg hover:bg-[#4a4541] transition-colors"
-            >
-              <Edit2 size={18} />
-              プロフィールを編集
-            </button>
+            <h1 className="text-2xl font-bold">マイページ</h1>
+            {isEditing ? (
+              <button
+                onClick={handleSaveClick}
+                className="flex items-center gap-2 px-4 py-2 bg-[#6b635d] text-white rounded-lg hover:bg-[#6b635d]/80 transition-colors"
+              >
+                保存
+              </button>
+            ) : (
+              <button
+                onClick={handleEditClick}
+                className="flex items-center gap-2 px-4 py-2 bg-[#6b635d] text-white rounded-lg hover:bg-[#6b635d]/80 transition-colors"
+              >
+                <Edit2 className="w-4 h-4" />
+                プロフィールを編集
+              </button>
+            )}
           </div>
           
           {/* Profile Header */}
@@ -243,16 +256,15 @@ export default function MyPage() {
               />
               <div className="flex-1">
                 <div className="flex items-center gap-4 mb-2">
-                  <h1 className="text-2xl font-semibold text-[#4a4541]">{formData.lastName} {formData.firstName}</h1>
+                  <h2 className="text-xl font-bold">
+                    {userData?.name || `${formData.lastName} ${formData.firstName}` || 'ユーザー名未設定'}
+                  </h2>
+                  <span className="text-sm text-[#6b635d]/60">/ {userData?.position || formData.position}</span>
                 </div>
-                <p className="text-[#6b635d] mb-2">{formData.department} / {formData.position}</p>
-                <div className="flex gap-3 mb-4">
-                  <span className="text-sm bg-[#e6dfd4] text-[#6b635d] px-3 py-1 rounded-full">
-                    社歴 {formData.yearsOfService}年目
-                  </span>
-                  <span className="text-sm bg-[#e6dfd4] text-[#6b635d] px-3 py-1 rounded-full">
-                    {formData.employmentType}
-                  </span>
+                <div className="mt-2 space-y-1 text-sm">
+                  <p>{userData?.department?.name || formData.department || '部署未設定'}</p>
+                  <p>社歴：{userData?.yearsOfService || formData.yearsOfService}年目</p>
+                  <p>入社形態：{userData?.joinForm || formData.employmentType}</p>
                 </div>
                 <div className="mb-4">
                   <span className="text-2xl font-bold text-[#4a4541] block text-center bg-[#e6dfd4] px-6 py-3 rounded-lg">
