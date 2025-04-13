@@ -65,70 +65,70 @@ export default function Home() {
 
         <div className="absolute inset-0 bg-gradient-to-b from-black/70 to-black/30 z-10" />
 
-        <div className="relative z-20 min-h-screen flex items-center justify-center">
-          <div className="max-w-md w-full mx-auto px-6">
-            <div className="text-center mb-12">
-              <h1 className="text-5xl font-thin font-sans-jp mb-6 text-white tracking-[0.5em]">CHOTTO</h1>
-              <p className="text-base text-gray-200 font-sans-jp font-thin mb-12">
+        <div className="relative z-20 min-h-screen flex items-center justify-center py-8 sm:py-12">
+          <div className="max-w-md w-full mx-auto px-4 sm:px-6">
+            <div className="text-center mb-8 sm:mb-12">
+              <h1 className="text-3xl sm:text-5xl font-thin font-sans-jp mb-4 sm:mb-6 text-white tracking-[0.3em] sm:tracking-[0.5em]">CHOTTO</h1>
+              <p className="text-sm sm:text-base text-gray-200 font-sans-jp font-thin mb-8 sm:mb-12">
                 ちょっと聞きたい。ちょっと話したい。
                 <br />から何か生まれるかも。
               </p>
             </div>
 
-            <form onSubmit={handleLogin} className="space-y-6">
+            <form onSubmit={handleLogin} className="space-y-4 sm:space-y-6">
               {errorMessage && (
-                <div className="text-red-400 text-sm text-center">{errorMessage}</div>
+                <div className="text-red-400 text-xs sm:text-sm text-center">{errorMessage}</div>
               )}
 
               <div className="relative">
-                <Mail className="absolute left-4 top-1/2 transform -translate-y-1/2 text-white/50" size={20} />
+                <Mail className="absolute left-3 sm:left-4 top-1/2 transform -translate-y-1/2 text-white/50 w-4 h-4 sm:w-5 sm:h-5" />
                 <input
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="メールアドレス"
                   required
-                  className="w-full pl-12 pr-4 py-4 bg-white/10 backdrop-blur-sm border-2 border-white/20 rounded-lg focus:outline-none focus:ring-2 focus:ring-white/30 text-white placeholder-white/50"
+                  className="w-full pl-10 sm:pl-12 pr-3 sm:pr-4 py-3 sm:py-4 bg-white/10 backdrop-blur-sm border-2 border-white/20 rounded-lg focus:outline-none focus:ring-2 focus:ring-white/30 text-white placeholder-white/50 text-sm sm:text-base"
                 />
               </div>
 
               <div className="relative">
-                <Lock className="absolute left-4 top-1/2 transform -translate-y-1/2 text-white/50" size={20} />
+                <Lock className="absolute left-3 sm:left-4 top-1/2 transform -translate-y-1/2 text-white/50 w-4 h-4 sm:w-5 sm:h-5" />
                 <input
                   type="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="パスワード"
                   required
-                  className="w-full pl-12 pr-4 py-4 bg-white/10 backdrop-blur-sm border-2 border-white/20 rounded-lg focus:outline-none focus:ring-2 focus:ring-white/30 text-white placeholder-white/50"
+                  className="w-full pl-10 sm:pl-12 pr-3 sm:pr-4 py-3 sm:py-4 bg-white/10 backdrop-blur-sm border-2 border-white/20 rounded-lg focus:outline-none focus:ring-2 focus:ring-white/30 text-white placeholder-white/50 text-sm sm:text-base"
                 />
               </div>
 
-              <div className="flex items-center justify-between">
+              <div className="flex items-center justify-between text-xs sm:text-sm">
                 <label className="flex items-center">
                   <input
                     type="checkbox"
                     checked={rememberMe}
                     onChange={(e) => setRememberMe(e.target.checked)}
-                    className="w-4 h-4 bg-white/10 border-2 border-white/20 rounded focus:ring-2 focus:ring-white/30"
+                    className="w-3 h-3 sm:w-4 sm:h-4 bg-white/10 border-2 border-white/20 rounded focus:ring-2 focus:ring-white/30"
                   />
-                  <span className="ml-2 text-sm text-gray-400">ログインを記憶する</span>
+                  <span className="ml-2 text-gray-400">ログインを記憶する</span>
                 </label>
-                <a href="/forgot-password" className="text-sm text-gray-400 hover:text-white transition-colors">
+                <a href="/forgot-password" className="text-gray-400 hover:text-white transition-colors">
                   パスワードを忘れた方
                 </a>
               </div>
 
               <button
                 type="submit"
-                className="w-full py-4 bg-white/10 backdrop-blur-sm border-2 border-white/20 rounded-lg hover:bg-white/20 transition-all text-white font-medium flex items-center justify-center gap-2 group"
+                className="w-full py-3 sm:py-4 bg-white/10 backdrop-blur-sm border-2 border-white/20 rounded-lg hover:bg-white/20 transition-all text-white font-medium flex items-center justify-center gap-2 group text-sm sm:text-base"
               >
                 ログイン
-                <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5 group-hover:translate-x-1 transition-transform" />
               </button>
 
               <div className="text-center">
-                <a href="/registar" className="text-sm text-gray-400 hover:text-white transition-colors">
+                <a href="/registar" className="text-xs sm:text-sm text-gray-400 hover:text-white transition-colors">
                   アカウントをお持ちでない方はこちら
                 </a>
               </div>

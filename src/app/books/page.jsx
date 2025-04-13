@@ -1,10 +1,11 @@
 'use client';
 
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import BookCard from '../../components/BookCard';
 import Header from '../../components/Header';
 import Footer from '../../components/Footer';
-import { Search as SearchIcon } from 'lucide-react';
+import { Search as SearchIcon, ArrowLeft } from 'lucide-react';
 
 // 本のデータリスト
 const booksList = [
@@ -50,6 +51,7 @@ const booksList = [
 
 export default function BooksPage() {
   const [searchQuery, setSearchQuery] = useState('');
+  const router = useRouter();
 
   // 検索機能の実装
   const filteredBooks = booksList.filter(book =>
@@ -77,18 +79,18 @@ export default function BooksPage() {
         <div className="absolute inset-0 bg-gradient-to-b from-black/70 to-black/30 z-10" />
         
         <div className="relative z-20 min-h-screen bg-black/90 pt-20">
-          <div className="max-w-4xl mx-auto px-6">
-            <div className="text-center mb-12">
-              <h2 className="text-4xl font-normal font-sans-jp mb-4 text-white tracking-widest">読書仲間から探す</h2>
-              <p className="text-gray-400 font-sans-jp">本を通じて新しい出会いを見つけましょう</p>
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="text-center mb-8 sm:mb-12">
+              <h2 className="text-3xl sm:text-4xl font-normal font-sans-jp mb-2 sm:mb-4 text-white tracking-widest">読書仲間から探す</h2>
+              <p className="text-sm sm:text-base text-gray-400 font-sans-jp">本を通じて新しい出会いを見つけましょう</p>
             </div>
             
             {/* 検索バー */}
-            <div className="relative mb-8">
+            <div className="relative mb-6 sm:mb-8 max-w-2xl mx-auto">
               <input
                 type="text"
                 placeholder="本のタイトルや著者名で検索..."
-                className="w-full pl-12 pr-4 py-3 bg-white/10 backdrop-blur-sm border-2 border-white/20 rounded-lg focus:outline-none focus:ring-2 focus:ring-white/30 text-white placeholder-white/50"
+                className="w-full pl-12 pr-4 py-2 sm:py-3 bg-white/10 backdrop-blur-sm border-2 border-white/20 rounded-lg focus:outline-none focus:ring-2 focus:ring-white/30 text-white placeholder-white/50 text-sm sm:text-base"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
               />
@@ -96,10 +98,28 @@ export default function BooksPage() {
             </div>
 
             {/* 本のリスト */}
-            <div className="grid grid-cols-1 gap-4">
-              {filteredBooks.map(book => (
-                <BookCard key={book.id} book={book} />
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
+              {filteredBooks.map((book) => (
+                <div
+                  key={book.id}
+                  className="bg-white/10 backdrop-blur-sm border-2 border-white/20 rounded-lg p-4 sm:p-6 hover:bg-white/20 transition-all cursor-pointer"
+                  onClick={() => router.push(`/books/${book.id}/readers`)}
+                >
+                  <h2 className="text-lg sm:text-xl font-bold mb-2 line-clamp-2">{book.title}</h2>
+                  <p className="text-sm sm:text-base text-gray-300 mb-2">著者：{book.author}</p>
+                  <p className="text-sm text-gray-400 line-clamp-3">{book.description}</p>
+                </div>
               ))}
+            </div>
+
+            <div className="mt-8 sm:mt-12 text-center">
+              <button
+                onClick={() => router.push('/')}
+                className="inline-flex items-center px-4 sm:px-6 py-2 sm:py-3 bg-white/10 hover:bg-white/20 text-white rounded-lg transition-all backdrop-blur-sm border-2 border-white/20 text-sm sm:text-base"
+              >
+                <ArrowLeft className="w-4 h-4 sm:w-5 sm:h-5 mr-2" />
+                トップページに戻る
+              </button>
             </div>
           </div>
         </div>
