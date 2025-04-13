@@ -6,6 +6,7 @@ import { ArrowLeft, Sparkles } from 'lucide-react';
 import Header from '../../../components/Header';
 import Footer from '../../../components/Footer';
 import SearchUserCard from '../../../components/SearchUserCard';
+import { useAuth } from '../../../contexts/AuthContext';
 
 function SearchResultsContent() {
   const router = useRouter();
@@ -13,6 +14,7 @@ function SearchResultsContent() {
   const query = searchParams.get('q');
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
+  const { user: currentUser } = useAuth();
 
   useEffect(() => {
     const fetchResults = async () => {
@@ -67,14 +69,25 @@ function SearchResultsContent() {
             const userEntries = data.results.filter(entry => entry.user_id === userId);
             const firstEntry = userEntries[0];
             
+            // スキルの重複を除去
+            const uniqueSkills = Array.from(new Set(userEntries.map(entry => entry.skill_name)))
+              .map(skillName => ({
+                id: userEntries.find(entry => entry.skill_name === skillName)?.skill_id,
+                name: skillName
+              }));
+            
             return {
               id: firstEntry.user_id,
+              user_id: firstEntry.user_id,
+              user_name: firstEntry.user_name,
               name: firstEntry.user_name,
-              department: firstEntry.department_name,
-              skills: userEntries.map(entry => ({
-                id: entry.skill_id,
-                name: entry.skill_name
-              })),
+              department_name: firstEntry.department_name,
+              yearsOfService: firstEntry.years_of_service,
+              joinForm: firstEntry.join_form,
+              image_data: firstEntry.image_data,
+              image_data_type: firstEntry.image_data_type,
+              welcome_level: firstEntry.welcome_level,
+              skills: uniqueSkills,
               similarity_score: firstEntry.similarity_score
             };
           });
@@ -121,7 +134,13 @@ function SearchResultsContent() {
         {users && users.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {users.map((user) => (
-              <SearchUserCard key={user.id} user={user} />
+              <div
+                key={user.user_id}
+                className="bg-white/10 backdrop-blur-sm border-2 border-white/20 rounded-lg p-6 hover:bg-white/20 transition-all cursor-pointer"
+                onClick={() => router.push(`/user/${user.user_id}`)}
+              >
+                <SearchUserCard key={user.user_id} user={user} currentUserId={currentUser?.id} />
+              </div>
             ))}
           </div>
         ) : (

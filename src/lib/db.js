@@ -1,14 +1,19 @@
-import { compare } from 'bcryptjs';
+import mysql from 'mysql2/promise';
+import dotenv from 'dotenv';
 
-const users = [
-  {
-    id: 1,
-    name: '山田太郎',
-    email: 'yamada@example.com',
-    password_hash: '$2b$10$XhWzQ./1XZHWMok/0UEjO.VriYnMFpTx7DQkmVZhNkje/8RL6HOlC', // ←ここに貼る
-  },
-];
+dotenv.config();
+
+const pool = mysql.createPool({
+  host: process.env.DB_HOST,
+  user: process.env.DB_USER,
+  password: process.env.DB_PASSWORD,
+  database: process.env.DB_NAME,
+  ssl: {
+    rejectUnauthorized: false // ← ここでSSL接続を許可！
+  }
+});
 
 export async function getUserByEmail(email) {
-  return users.find((user) => user.email === email);
+  const [rows] = await pool.query('SELECT * FROM users WHERE email = ?', [email]);
+  return rows[0] || null;
 }

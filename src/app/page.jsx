@@ -5,30 +5,41 @@ import { useRouter } from 'next/navigation';
 import { Mail, Lock, ArrowRight } from 'lucide-react';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
-import { signIn } from 'next-auth/react';
 
 export default function Home() {
   const router = useRouter();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [rememberMe, setRememberMe] = useState(false);
-  const [errorMessage, setErrorMessage] = useState(''); // 🔸追加
+  const [errorMessage, setErrorMessage] = useState('');
 
   const handleLogin = async (e) => {
     e.preventDefault();
-    setErrorMessage(''); // 🔸毎回初期化
+    setErrorMessage('');
 
-    const result = await signIn('credentials', {
-      redirect: false,
-      email,
-      password,
-    });
+    try {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_ENDPOINT}/auth/login`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, password }),
+      });
 
-    if (result.error) {
-      console.error('ログインエラー:', result.error);
-      setErrorMessage('メールアドレスまたはパスワードが正しくありません。'); // 🔸UI表示用
-    } else {
+      const data = await response.json();
+
+      if (!response.ok || !data.success) {
+        setErrorMessage(data.detail || 'メールアドレスまたはパスワードが正しくありません。');
+        return;
+      }
+
+      // 成功時の処理（例：ユーザー情報を保存、ページ遷移）
+      console.log('ログイン成功:', data);
+      localStorage.setItem('user', JSON.stringify(data)); // ローカルにユーザー情報を保持
       router.push('/search');
+    } catch (error) {
+      console.error('ログイン通信エラー:', error);
+      setErrorMessage('通信エラーが発生しました。');
     }
   };
 
@@ -46,7 +57,10 @@ export default function Home() {
           playsInline
           className="absolute inset-0 w-full h-full object-cover opacity-50"
         >
-          <source src="https://cdn.coverr.co/videos/coverr-typing-on-computer-keyboard-2154/1080p.mp4" type="video/mp4" />
+          <source
+            src="https://cdn.coverr.co/videos/coverr-typing-on-computer-keyboard-2154/1080p.mp4"
+            type="video/mp4"
+          />
         </video>
 
         <div className="absolute inset-0 bg-gradient-to-b from-black/70 to-black/30 z-10" />
@@ -63,7 +77,7 @@ export default function Home() {
 
             <form onSubmit={handleLogin} className="space-y-6">
               {errorMessage && (
-                <div className="text-red-400 text-sm text-center">{errorMessage}</div> // 🔸エラー表示
+                <div className="text-red-400 text-sm text-center">{errorMessage}</div>
               )}
 
               <div className="relative">
@@ -119,12 +133,6 @@ export default function Home() {
                 </a>
               </div>
             </form>
-
-            <div className="text-center mt-4">
-              <a href="/google" className="text-sm text-gray-400 hover:text-white transition-colors">
-                Googleでログイン »
-              </a>
-            </div>
           </div>
         </div>
       </main>

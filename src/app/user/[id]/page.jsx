@@ -50,7 +50,14 @@ export default function UserDetailPage() {
       if (!data) {
         throw new Error('ユーザーが見つかりません');
       }
-      setUser(data);
+
+      // 画像URLを設定（APIのレスポンス構造に合わせて修正）
+      const userData = {
+        ...data,
+        imageUrl: data.image_url || data.imageUrl || '/default-avatar.png'
+      };
+      
+      setUser(userData);
     } catch (error) {
       console.error('Error:', error);
       setError(error.message);
@@ -140,13 +147,20 @@ export default function UserDetailPage() {
           <div className="flex items-center space-x-4">
             <div className="relative w-24 h-24">
               <Image
-                src={user.imageUrl || '/photo.jpg'}
+                src={
+                  user.image_data && user.image_data_type
+                    ? `data:${user.image_data_type};base64,${user.image_data}`
+                    : '/default-avatar.png'
+                }
                 alt={user.name}
-                fill
+                width={96}
+                height={96}
                 className="rounded-full object-cover"
                 onError={(e) => {
-                  e.target.src = '/photo.jpg';
+                  console.error('Image load error:', e);
+                  e.target.src = '/default-avatar.png';
                 }}
+                priority
               />
             </div>
             <div>

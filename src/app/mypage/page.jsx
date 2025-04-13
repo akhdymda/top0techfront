@@ -22,15 +22,16 @@ export default function MyPage() {
   const [bookmarkDate, setBookmarkDate] = useState(null);
   const welcomeMessageRef = useRef(null);
   const [errors, setErrors] = useState({});
+  const [userData, setUserData] = useState(null);
   const [formData, setFormData] = useState({
-    lastName: '佐藤',
-    firstName: '美咲',
+    lastName: '',
+    firstName: '',
     email: 'example@company.com',
-    department: 'マーケティング部',
+    department: '',
     position: 'プロジェクトマネージャー',
     yearsOfService: 5,
     employmentType: '新卒',
-    skills: ['SEO（検索エンジン最適化）', 'コンテンツマーケティング', 'SNSマーケティング', ],
+    skills: [],
     consultationDays: ['月', '水', '金'],
     consultationTimeStart: '14:00',
     consultationTimeEnd: '17:00',
@@ -48,6 +49,31 @@ export default function MyPage() {
       }
     ]
   });
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_ENDPOINT}/users/1`);
+        const data = await response.json();
+        setUserData(data);
+        
+        // Update formData with user data where available
+        setFormData(prev => ({
+          ...prev,
+          lastName: data.user_name?.split(' ')[0] || '',
+          firstName: data.user_name?.split(' ')[1] || '',
+          department: data.department_name || '',
+          skills: data.skills?.map(skill => typeof skill === 'string' ? skill : skill.name) || [],
+          yearsOfService: data.years_of_service || prev.yearsOfService,
+          employmentType: data.join_form || prev.employmentType,
+        }));
+      } catch (error) {
+        console.error('ユーザー情報の取得に失敗しました:', error);
+      }
+    };
+
+    fetchUserData();
+  }, []);
 
   useEffect(() => {
     function handleClickOutside(event) {
@@ -206,12 +232,12 @@ export default function MyPage() {
               )}
               <Bookmark
                 size={24}
-                className={isBookmarked ? 'text-[#FF6058] fill-[#FF6058]' : 'text-gray-400'}
+                className={isBookmarked ? 'text-yellow-400 hover:text-yellow-500' : 'text-gray-400'}
               />
             </button>
             <div className="flex items-start gap-8">
               <img
-                src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&q=80&w=200&h=200"
+                src={userData?.image_data ? `data:${userData.image_data_type};base64,${userData.image_data}` : '/default-avatar.png'}
                 alt="Profile"
                 className="w-32 h-32 rounded-full object-cover border-4 border-white shadow-sm"
               />
