@@ -11,8 +11,12 @@ const nextConfig = {
         protocol: 'https',
         hostname: '**',
       },
+      {
+        protocol: 'https',
+        hostname: 'app-002-step3-2-node-oshima12.azurewebsites.net',
+      },
     ],
-    domains: ['images.unsplash.com'],
+    domains: ['images.unsplash.com', 'app-002-step3-2-node-oshima12.azurewebsites.net'],
   },
 }
 
