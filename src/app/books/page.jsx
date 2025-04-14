@@ -98,16 +98,16 @@ export default function BooksPage() {
             </div>
 
             {/* 本のリスト */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
+            <div className="max-w-3xl mx-auto space-y-4">
               {filteredBooks.map((book) => (
                 <div
                   key={book.id}
-                  className="bg-white/10 backdrop-blur-sm border-2 border-white/20 rounded-lg p-4 sm:p-6 hover:bg-white/20 transition-all cursor-pointer"
+                  className="bg-white/10 backdrop-blur-sm border-2 border-white/20 rounded-lg p-6 hover:bg-white/20 transition-all cursor-pointer"
                   onClick={() => router.push(`/books/${book.id}/readers`)}
                 >
-                  <h2 className="text-lg sm:text-xl font-bold mb-2 line-clamp-2">{book.title}</h2>
-                  <p className="text-sm sm:text-base text-gray-300 mb-2">著者：{book.author}</p>
-                  <p className="text-sm text-gray-400 line-clamp-3">{book.description}</p>
+                  <h2 className="text-xl font-bold mb-3">{book.title}</h2>
+                  <p className="text-base text-gray-300 mb-3">著者：{book.author}</p>
+                  <p className="text-sm text-gray-400">{book.description}</p>
                 </div>
               ))}
             </div>

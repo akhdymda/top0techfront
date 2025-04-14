@@ -146,22 +146,20 @@ export default function UserDetailPage() {
         <div className="flex justify-between items-start mb-6 pb-6 border-b border-gray-200">
           <div className="flex items-center space-x-4">
             <div className="relative w-24 h-24">
-              <Image
-                src={
-                  user.image_data && user.image_data_type
-                    ? `data:${user.image_data_type};base64,${user.image_data}`
-                    : '/default-avatar.png'
-                }
-                alt={user.name}
-                width={96}
-                height={96}
-                className="rounded-full object-cover"
-                onError={(e) => {
-                  console.error('Image load error:', e);
-                  e.target.src = '/default-avatar.png';
-                }}
-                priority
-              />
+              {user.image_data && user.image_data_type ? (
+                <Image
+                  src={`data:${user.image_data_type};base64,${user.image_data}`}
+                  alt={user.name}
+                  width={96}
+                  height={96}
+                  className="rounded-full object-cover"
+                  priority
+                />
+              ) : (
+                <div className="w-full h-full rounded-full bg-gray-100 flex items-center justify-center text-gray-500 text-3xl font-medium">
+                  {user.name ? user.name.charAt(0) : '?'}
+                </div>
+              )}
             </div>
             <div>
               <h1 className="text-2xl font-bold text-gray-900">{user.name}</h1>
