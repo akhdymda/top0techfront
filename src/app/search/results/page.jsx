@@ -111,10 +111,22 @@ function SearchResultsContent() {
 
   if (loading) {
     return (
-      <div className="fixed inset-0 bg-black text-white flex items-center justify-center">
-        <div className="text-center">
-          <h1 className="text-4xl font-bold mb-4 animate-pulse">CHOTTO</h1>
-          <Sparkles className="animate-spin" size={32} />
+      <div className="relative min-h-[50vh]">
+        <video
+          autoPlay
+          muted
+          loop
+          playsInline
+          className="absolute inset-0 w-full h-full object-cover opacity-50"
+        >
+          <source src="https://cdn.coverr.co/videos/coverr-typing-on-computer-keyboard-2154/1080p.mp4" type="video/mp4" />
+        </video>
+        <div className="absolute inset-0 bg-black/70" />
+        <div className="relative z-10 flex justify-center items-center min-h-[50vh]">
+          <div className="text-center">
+            <Sparkles className="animate-spin mb-4 text-white" size={32} />
+            <p className="text-white">検索結果を読み込んでいます...</p>
+          </div>
         </div>
       </div>
     );
@@ -165,8 +177,23 @@ function SearchResultsContent() {
 
 function SearchResultsLoading() {
   return (
-    <div className="flex justify-center items-center py-32">
-      <p className="text-gray-400 text-xl">検索結果を読み込んでいます...</p>
+    <div className="relative min-h-[50vh]">
+      <video
+        autoPlay
+        muted
+        loop
+        playsInline
+        className="absolute inset-0 w-full h-full object-cover opacity-50"
+      >
+        <source src="https://cdn.coverr.co/videos/coverr-typing-on-computer-keyboard-2154/1080p.mp4" type="video/mp4" />
+      </video>
+      <div className="absolute inset-0 bg-black/70" />
+      <div className="relative z-10 flex justify-center items-center min-h-[50vh]">
+        <div className="text-center">
+          <Sparkles className="animate-spin mb-4 text-white" size={32} />
+          <p className="text-white">検索結果を読み込んでいます...</p>
+        </div>
+      </div>
     </div>
   );
 }

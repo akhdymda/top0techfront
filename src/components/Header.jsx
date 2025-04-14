@@ -34,6 +34,7 @@ export default function Header() {
             height={14}
             className="h-auto"
             priority
+            unoptimized
           />
           <span className="text-2xl text-gray-700 font-medium">CHOTTO</span>
         </Link>
