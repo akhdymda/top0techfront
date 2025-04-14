@@ -55,9 +55,7 @@ export default function SearchUserCard({ user }) {
   };
 
   const displayName = user.user_name || '名前未設定';
-  const imageSrc = user.image_data 
-    ? `data:image/jpeg;base64,${user.image_data}`
-    : '/default-avatar.png';
+  const initial = displayName.charAt(0);
 
   const handleCardClick = () => {
     if (user.user_id) {
@@ -71,12 +69,18 @@ export default function SearchUserCard({ user }) {
       <div className="flex items-start justify-between mb-4">
         <div className="flex gap-3">
           <div className="relative w-12 h-12 flex-shrink-0">
-            <Image
-              src={imageSrc}
-              alt={displayName}
-              fill
-              className="rounded-md object-cover"
-            />
+            {user.image_data ? (
+              <Image
+                src={`data:${user.image_data_type};base64,${user.image_data}`}
+                alt={displayName}
+                fill
+                className="rounded-full object-cover"
+              />
+            ) : (
+              <div className="w-full h-full rounded-full bg-gray-100 flex items-center justify-center text-gray-500 text-2xl font-medium">
+                {initial}
+              </div>
+            )}
           </div>
           <div>
             <h3 className="font-bold text-base text-[#6b635d]">{displayName}</h3>
@@ -94,7 +98,7 @@ export default function SearchUserCard({ user }) {
               : 'text-[#6b635d]/40 hover:text-[#6b635d]/60'
           }`}
         >
-          <StarIcon className="h-5 w-5" />
+          <StarIcon className={`h-5 w-5 ${isBookmarked ? 'fill-yellow-400' : ''}`} />
         </button>
       </div>
 
