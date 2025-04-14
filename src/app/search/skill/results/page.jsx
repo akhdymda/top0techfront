@@ -18,12 +18,12 @@ function SkillSearchResultsContent() {
   useEffect(() => {
     const fetchUsers = async () => {
       try {
+        setLoading(true);
         const response = await fetch(`${process.env.NEXT_PUBLIC_API_ENDPOINT}/skills/${encodeURIComponent(skillName)}`);
         if (!response.ok) {
           throw new Error('ユーザーデータの取得に失敗しました');
         }
         const data = await response.json();
-        console.log('Initial API response:', data);
         
         // ユーザー詳細情報を取得
         const userDetailsPromises = data.users.map(async (user) => {
@@ -34,12 +34,10 @@ function SkillSearchResultsContent() {
             throw new Error(`ユーザー情報の取得に失敗しました: ${user.id}`);
           }
           const userDetail = await userResponse.json();
-          console.log('User detail response:', userDetail);
           return userDetail;
         });
 
         const userDetails = await Promise.all(userDetailsPromises);
-        console.log('Final user details:', userDetails);
         setUsers(userDetails);
       } catch (error) {
         console.error('ユーザーデータの取得に失敗しました:', error);
@@ -53,16 +51,16 @@ function SkillSearchResultsContent() {
     }
   }, [skillName]);
 
-  // if (loading) {
-  //   return (
-  //     <div className="fixed inset-0 bg-black text-white flex items-center justify-center">
-  //       <div className="text-center">
-  //         <h1 className="text-4xl font-bold mb-4 animate-pulse">CHOTTO</h1>
-  //         <Sparkles className="animate-spin" size={32} />
-  //       </div>
-  //     </div>
-  //   );
-  // }
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center min-h-[50vh]">
+        <div className="text-center">
+          <Sparkles className="animate-spin mb-4" size={32} />
+          <p className="text-gray-400">検索結果を読み込んでいます...</p>
+        </div>
+      </div>
+    );
+  }
 
   const handleUserClick = (userId) => {
     router.push(`/user/${userId}`);
@@ -113,8 +111,11 @@ function SkillSearchResultsContent() {
 
 function SearchResultsLoading() {
   return (
-    <div className="flex justify-center items-center py-32">
-      <p className="text-gray-400 text-xl">検索結果を読み込んでいます...</p>
+    <div className="flex justify-center items-center min-h-[50vh]">
+      <div className="text-center">
+        <Sparkles className="animate-spin mb-4" size={32} />
+        <p className="text-gray-400">検索結果を読み込んでいます...</p>
+      </div>
     </div>
   );
 }
