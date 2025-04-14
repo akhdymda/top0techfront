@@ -64,7 +64,7 @@ export default function Search() {
     {
       title: "Recommend Book",
       description: "おすすめ本や読書会のご案内",
-      image: "book.png",
+      image: "/book.png",
       link:"/recommendedBook"
     }
   ];
