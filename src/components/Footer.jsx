@@ -11,7 +11,7 @@ export default function Footer() {
       </div>
       <div className="text-base text-gray-500">
         <Image
-          src="https://raw.githubusercontent.com/akhdymda/top0techfront/refs/heads/main/public/Tokyogaslogo.svg"
+          src="https://raw.githubusercontent.com/akhdymda/top0techfront/main/public/Tokyogaslogo.svg"
           alt="Tokyo Gas"
           width={100}
           height={24}
