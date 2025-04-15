@@ -2,8 +2,8 @@
 
 import { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { Menu, X } from 'lucide-react';
-import FallbackImage from '../components/FallbackImage'; // パスは必要に応じて調整
 
 export default function Header() {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
@@ -27,13 +27,14 @@ export default function Header() {
     <header className="fixed top-0 left-0 right-0 z-50">
       <div className="w-full px-4 py-2 flex justify-between items-center bg-white border-b">
         <Link href="/search#search-section" className="flex items-center gap-2">
-          <FallbackImage
+          <Image
             src="/CHOTTOlogo2.png"
             alt="CHOTTO"
             width={40}
             height={14}
             className="h-auto"
             priority
+            unoptimized
           />
           <span className="text-2xl text-gray-700 font-medium">CHOTTO</span>
         </Link>
