@@ -1,4 +1,6 @@
-import Image from 'next/image';
+'use client';
+
+import FallbackImage from '../components/FallbackImage';
 
 export default function Footer() {
   return (
@@ -10,15 +12,14 @@ export default function Footer() {
         <span>© 2025 top0tech</span>
       </div>
       <div className="text-base text-gray-500">
-        <Image
+        <FallbackImage
           src="/Tokyogaslogo.svg"
           alt="Tokyo Gas"
           width={100}
           height={24}
           className="h-6 w-auto"
-          unoptimized
         />
       </div>
     </footer>
   );
-} 
+}

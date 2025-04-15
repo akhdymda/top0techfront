@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import Image from 'next/image';
+import FallbackImage from '../../components/FallbackImage';
 import { ArrowDown, ArrowUpRight, Search as SearchIcon, Sparkles, Cloud } from 'lucide-react';
 import Header from '../../components/Header';
 import Footer from '../../components/Footer';
@@ -275,16 +275,17 @@ export default function Search() {
                     activeSection === index ? 'opacity-100' : 'opacity-0'
                   }`}
                 >
-                  <Image
+                  <FallbackImage
                     src={section.image}
                     alt={section.title}
-                    fill
                     className="object-cover"
+                    fill
                     priority={index === 0}
                   />
                 </div>
               ))}
             </div>
+
           </div>
         </div>
       </div>
